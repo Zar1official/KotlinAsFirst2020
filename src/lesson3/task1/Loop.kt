@@ -81,7 +81,10 @@ fun digitNumber(n: Int): Int = TODO()
  * Найти число Фибоначчи из ряда 1, 1, 2, 3, 5, 8, 13, 21, ... с номером n.
  * Ряд Фибоначчи определён следующим образом: fib(1) = 1, fib(2) = 1, fib(n+2) = fib(n) + fib(n+1)
  */
-fun fib(n: Int): Int = TODO()
+fun fib(n: Int): Int = when (n) {
+    1, 2 -> 1
+    else -> fib(n - 1) + fib(n - 2)
+}
 
 /**
  * Простая (2 балла)
@@ -117,7 +120,18 @@ fun maxDivisor(n: Int): Int = TODO()
  * Написать функцию, которая находит, сколько шагов требуется для
  * этого для какого-либо начального X > 0.
  */
-fun collatzSteps(x: Int): Int = TODO()
+fun collatzSteps(x: Int): Int {
+    var n = x
+    var counter = 0
+    while (n != 1) {
+        if (n % 2 == 0)
+            n /= 2
+        else
+            n = 3 * n + 1
+        counter += 1
+    }
+    return counter
+}
 
 /**
  * Средняя (3 балла)
@@ -134,7 +148,18 @@ fun lcm(m: Int, n: Int): Int = TODO()
  * Взаимно простые числа не имеют общих делителей, кроме 1.
  * Например, 25 и 49 взаимно простые, а 6 и 8 -- нет.
  */
-fun isCoPrime(m: Int, n: Int): Boolean = TODO()
+fun isCoPrime(m: Int, n: Int): Boolean {
+    // алгоритм Евклида
+    var n1 = m
+    var n2 = n
+    while (n1 != 0 && n2 != 0) {
+        if (n1 > n2)
+            n1 %= n2
+        else
+            n2 %= n1
+    }
+    return n1 + n2 == 1
+}
 
 /**
  * Средняя (3 балла)
