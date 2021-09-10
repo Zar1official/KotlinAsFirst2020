@@ -86,7 +86,7 @@ fun fib(n: Int): Int {
     if (cache.containsKey(n))
         return cache[n]!!
     else
-        cache.put(n, fib(n - 1) + fib(n - 2))
+        cache[n] = fib(n - 1) + fib(n - 2)
     return cache[n]!!
 
 }
