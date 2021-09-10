@@ -2,7 +2,6 @@
 
 package lesson3.task1
 
-import lesson1.task1.sqr
 import kotlin.math.sqrt
 
 // Урок 3: циклы
@@ -82,7 +81,7 @@ fun digitNumber(n: Int): Int = TODO()
  * Ряд Фибоначчи определён следующим образом: fib(1) = 1, fib(2) = 1, fib(n+2) = fib(n) + fib(n+1)
  */
 
-//решение через рекурсию(кэшируем вызовы, таким образом, сработает быстро)
+//решение через рекурсию(кэшируем вызовы с помощью словарика, таким образом, сработает быстро)
 //val cache = mutableMapOf(1 to 1, 2 to 1)
 //fun fib(n: Int): Int {
 //    if (!cache.containsKey(n))
@@ -247,4 +246,28 @@ fun squareSequenceDigit(n: Int): Int = TODO()
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun fibSequenceDigit(n: Int): Int = TODO()
+fun fibSequenceDigit(n: Int): Int {
+    var path = 0
+    var start = 0
+    while (true) {
+        val curNumber = getDigits(fib(start))
+        for (i in curNumber) {
+            path += 1
+            if (path == n) {
+                return i
+            }
+        }
+        start += 1
+    }
+}
+
+fun getDigits(n: Int): List<Int> {
+    val digits = mutableListOf<Int>()
+    var number = n
+    while (number != 0) {
+        digits.add(number % 10)
+        number /= 10
+    }
+    digits.reverse()
+    return digits
+}
