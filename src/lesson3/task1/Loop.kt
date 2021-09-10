@@ -81,14 +81,23 @@ fun digitNumber(n: Int): Int = TODO()
  * Найти число Фибоначчи из ряда 1, 1, 2, 3, 5, 8, 13, 21, ... с номером n.
  * Ряд Фибоначчи определён следующим образом: fib(1) = 1, fib(2) = 1, fib(n+2) = fib(n) + fib(n+1)
  */
-val cache = mutableMapOf(1 to 1, 2 to 1)
-fun fib(n: Int): Int {
-    if (cache.containsKey(n))
-        return cache[n]!!
-    else
-        cache[n] = fib(n - 1) + fib(n - 2)
-    return cache[n]!!
 
+//решение через рекурсию(кэшируем вызовы, таким образом, сработает быстро)
+//val cache = mutableMapOf(1 to 1, 2 to 1)
+//fun fib(n: Int): Int {
+//    if (!cache.containsKey(n))
+//        cache[n] = fib(n - 1) + fib(n - 2)
+//    return cache[n]!!
+//
+//}
+
+fun fib(n: Int): Int {
+    // решение через динамический массив
+    val fibNums = mutableListOf(0, 1, 1)
+    for (i in 3..n) {
+        fibNums.add(fibNums[i - 1] + fibNums[i - 2])
+    }
+    return fibNums[n]
 }
 
 /**
