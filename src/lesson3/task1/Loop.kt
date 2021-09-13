@@ -119,7 +119,9 @@ fun minDivisor(n: Int): Int {
  * Для заданного числа n > 1 найти максимальный делитель, меньший n
  */
 // красота
-fun maxDivisor(n: Int): Int = (1 until n).filter { n % it == 0 }.toList().fold(Int.MIN_VALUE) { acc, i -> max(acc, i) }
+fun maxDivisor(n: Int): Int =
+    (n - 1 downTo 1).filter { n % it == 0 }.toList().fold(Int.MIN_VALUE) { acc, i -> max(acc, i) }
+
 
 /**
  * Простая (2 балла)
