@@ -3,6 +3,8 @@
 package lesson3.task1
 
 import lesson1.task1.sqr
+import kotlin.math.abs
+import kotlin.math.max
 import kotlin.math.sqrt
 
 // Урок 3: циклы
@@ -116,7 +118,8 @@ fun minDivisor(n: Int): Int {
  *
  * Для заданного числа n > 1 найти максимальный делитель, меньший n
  */
-fun maxDivisor(n: Int): Int = TODO()
+// красота
+fun maxDivisor(n: Int): Int = (1 until n).filter { n % it == 0 }.toList().fold(Int.MIN_VALUE) { acc, i -> max(acc, i) }
 
 /**
  * Простая (2 балла)

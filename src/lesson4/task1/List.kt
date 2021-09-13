@@ -127,7 +127,11 @@ fun abs(v: List<Double>): Double = TODO()
  *
  * Рассчитать среднее арифметическое элементов списка list. Вернуть 0.0, если список пуст
  */
-fun mean(list: List<Double>): Double = TODO()
+fun mean(list: List<Double>): Double {
+    if (list.isEmpty())
+        return 0.0
+    return list.sum() / list.size
+}
 
 /**
  * Средняя (3 балла)
@@ -195,7 +199,17 @@ fun factorizeToString(n: Int): String = TODO()
  * Результат перевода вернуть в виде списка цифр в base-ичной системе от старшей к младшей,
  * например: n = 100, base = 4 -> (1, 2, 1, 0) или n = 250, base = 14 -> (1, 3, 12)
  */
-fun convert(n: Int, base: Int): List<Int> = TODO()
+fun convert(n: Int, base: Int): List<Int> {
+    if (n == 0)
+        return listOf(0)
+    val result = mutableListOf<Int>()
+    var number = n
+    while (number != 0) {
+        result.add(number % base)
+        number /= base
+    }
+    return result.reversed()
+}
 
 /**
  * Сложная (4 балла)
