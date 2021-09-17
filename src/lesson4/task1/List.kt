@@ -263,6 +263,7 @@ fun decimal(digits: List<Int>, base: Int): Int = TODO()
  */
 fun decimalFromString(str: String, base: Int): Int = TODO()
 
+
 /**
  * Сложная (5 баллов)
  *
@@ -271,7 +272,58 @@ fun decimalFromString(str: String, base: Int): Int = TODO()
  * 90 = XC, 100 = C, 400 = CD, 500 = D, 900 = CM, 1000 = M.
  * Например: 23 = XXIII, 44 = XLIV, 100 = C
  */
-fun roman(n: Int): String = TODO()
+fun roman(n: Int): String {
+
+    val units: String = when (n % 10) {
+        1 -> "I"
+        2 -> "II"
+        3 -> "III"
+        4 -> "IV"
+        5 -> "V"
+        6 -> "VI"
+        7 -> "VII"
+        8 -> "VIII"
+        9 -> "IX"
+        else -> ""
+    }
+
+    val tens: String = when (n / 10 % 10) {
+        1 -> "X"
+        2 -> "XX"
+        3 -> "XXX"
+        4 -> "XL"
+        5 -> "L"
+        6 -> "LX"
+        7 -> "LXX"
+        8 -> "LXXX"
+        9 -> "XC"
+        else -> ""
+    }
+
+    val hund: String = when (n / 100 % 10) {
+        1 -> "C"
+        2 -> "CC"
+        3 -> "CCC"
+        4 -> "CD"
+        5 -> "D"
+        6 -> "DC"
+        7 -> "DCC"
+        8 -> "DCCC"
+        9 -> "CM"
+        else -> ""
+    }
+
+    val thous: String = when (n / 1000 % 10) {
+        1 -> "M"
+        2 -> "MM"
+        3 -> "MMM"
+        4 -> "MMMM"
+        else -> ""
+
+    }
+    return thous + hund + tens + units
+
+}
 
 /**
  * Очень сложная (7 баллов)
