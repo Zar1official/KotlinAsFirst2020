@@ -3,6 +3,8 @@
 package lesson4.task1
 
 import lesson1.task1.discriminant
+import lesson7.task1.deleteMarked
+import java.lang.NullPointerException
 import kotlin.math.pow
 import kotlin.math.sqrt
 
@@ -261,7 +263,17 @@ fun decimal(digits: List<Int>, base: Int): Int = TODO()
  * Использовать функции стандартной библиотеки, напрямую и полностью решающие данную задачу
  * (например, str.toInt(base)), запрещается.
  */
-fun decimalFromString(str: String, base: Int): Int = TODO()
+fun decimalFromString(str: String, base: Int): Int {
+    val getValue = mutableMapOf<Char, Int>()
+    "0123456789qwertyuiopasdfghjklzxcvbnm".toList().sorted().forEachIndexed { el, i -> getValue[i] = el }
+    var result = 0.0
+    str.forEachIndexed { i, element ->
+        val value = getValue[element]
+        if (value != null)
+            result += base.toDouble().pow(str.length - i - 1) * value
+    }
+    return result.toInt()
+}
 
 
 /**
