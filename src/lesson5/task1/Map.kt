@@ -128,6 +128,7 @@ fun subtractOf(a: MutableMap<String, String>, b: Map<String, String>) {
     TODO()
 }
 
+
 /**
  * Простая (2 балла)
  *
@@ -135,7 +136,7 @@ fun subtractOf(a: MutableMap<String, String>, b: Map<String, String>) {
  * В выходном списке не должно быть повторяющихся элементов,
  * т. е. whoAreInBoth(listOf("Марат", "Семён, "Марат"), listOf("Марат", "Марат")) == listOf("Марат")
  */
-fun whoAreInBoth(a: List<String>, b: List<String>): List<String> = TODO()
+fun whoAreInBoth(a: List<String>, b: List<String>): List<String> = a.toSet().intersect(b.toSet()).toList()
 
 /**
  * Средняя (3 балла)
@@ -196,6 +197,7 @@ fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): S
  */
 fun canBuildFrom(chars: List<Char>, word: String): Boolean = TODO()
 
+
 /**
  * Средняя (4 балла)
  *
@@ -212,7 +214,8 @@ fun extractRepeats(list: List<String>): Map<String, Int> = TODO()
 
 /**
  * Средняя (3 балла)
- *
+
+}*
  * Для заданного списка слов определить, содержит ли он анаграммы.
  * Два слова здесь считаются анаграммами, если они имеют одинаковую длину
  * и одно можно составить из второго перестановкой его букв.
@@ -225,6 +228,12 @@ fun extractRepeats(list: List<String>): Map<String, Int> = TODO()
 fun hasAnagrams(words: List<String>): Boolean {
     val w = words.map { it.toCharArray().sorted().joinToString("") }.sorted()
     return w.any { elem -> w.count { it == elem } > 1 }
+}
+
+fun main() {
+    val chars = emptyList<Char>()
+    val string = ""
+    println(canBuildFrom(emptyList(), "string"))
 }
 
 /**
