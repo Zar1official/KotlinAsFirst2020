@@ -230,11 +230,6 @@ fun hasAnagrams(words: List<String>): Boolean {
     return w.any { elem -> w.count { it == elem } > 1 }
 }
 
-fun main() {
-    val chars = emptyList<Char>()
-    val string = ""
-    println(canBuildFrom(emptyList(), "string"))
-}
 
 /**
  * Сложная (5 баллов)
