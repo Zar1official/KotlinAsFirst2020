@@ -226,7 +226,7 @@ fun extractRepeats(list: List<String>): Map<String, Int> = TODO()
  *   hasAnagrams(listOf("тор", "свет", "рот")) -> true
  */
 fun hasAnagrams(words: List<String>): Boolean {
-    val w = words.map { it.toCharArray().sorted().joinToString("") }.sorted()
+    val w = words.map { it.toCharArray().sorted().joinToString("") }
     return w.any { elem -> w.count { it == elem } > 1 }
 }
 
