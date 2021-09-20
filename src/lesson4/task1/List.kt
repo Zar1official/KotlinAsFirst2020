@@ -146,11 +146,9 @@ fun mean(list: List<Double>): Double {
  * Обратите внимание, что данная функция должна изменять содержание списка list, а не его копии.
  */
 fun center(list: MutableList<Double>): MutableList<Double> {
-    if (list.isNotEmpty()) {
-        val medium = list.sum() / list.size
-        for (i in list.indices) {
-            list[i] -= medium
-        }
+    val medium = list.sum() / list.size
+    for (i in list.indices) {
+        list[i] -= medium
     }
     return list
 }
@@ -437,7 +435,6 @@ fun russian(n: Int): String {
         }
     }
     return result.trim()
-
 
 
 }
