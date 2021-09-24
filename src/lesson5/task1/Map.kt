@@ -2,6 +2,9 @@
 
 package lesson5.task1
 
+import ru.spbstu.ktuples.Tuple
+import ru.spbstu.wheels.sorted
+
 // Урок 5: ассоциативные массивы и множества
 // Максимальное количество баллов = 14
 // Рекомендуемое количество баллов = 9
@@ -195,7 +198,8 @@ fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): S
  * Например:
  *   canBuildFrom(listOf('a', 'b', 'o'), "baobab") -> true
  */
-fun canBuildFrom(chars: List<Char>, word: String): Boolean = TODO()
+fun canBuildFrom(chars: List<Char>, word: String): Boolean =
+    word.toSortedSet().map { it.lowercase() } == chars.toSortedSet().map { it.lowercase() }
 
 
 /**
@@ -210,7 +214,15 @@ fun canBuildFrom(chars: List<Char>, word: String): Boolean = TODO()
  * Например:
  *   extractRepeats(listOf("a", "b", "a")) -> mapOf("a" to 2)
  */
-fun extractRepeats(list: List<String>): Map<String, Int> = TODO()
+fun extractRepeats(list: List<String>): Map<String, Int> {
+    val repeats = mutableMapOf<String, Int>()
+    list.forEach { elem ->
+        val count = list.count { elem == it }
+        if (count > 1)
+            repeats[elem] = count
+    }
+    return repeats
+}
 
 /**
  * Средняя (3 балла)
@@ -284,7 +296,21 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
  *   findSumOfTwo(listOf(1, 2, 3), 4) -> Pair(0, 2)
  *   findSumOfTwo(listOf(1, 2, 3), 6) -> Pair(-1, -1)
  */
-fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> = TODO()
+fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
+    for (i in 0..number) {
+        if (i in list && number - i in list) {
+            val firstIndex = list.indexOf(i)
+            val secondIndex = list.indexOf(number - i)
+            if (firstIndex != secondIndex)
+                return Pair(list.indexOf(i), list.indexOf(number - i)).sorted()
+        }
+    }
+    return Pair(-1, -1)
+}
+
+fun main() {
+    println(findSumOfTwo(listOf(1, 2, 3), 4))
+}
 
 /**
  * Очень сложная (8 баллов)
