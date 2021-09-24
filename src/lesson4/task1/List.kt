@@ -3,6 +3,7 @@
 package lesson4.task1
 
 import lesson1.task1.discriminant
+import lesson5.task1.propagateHandshakes
 import lesson7.task1.deleteMarked
 import java.lang.NullPointerException
 import kotlin.math.pow
@@ -262,13 +263,12 @@ fun decimal(digits: List<Int>, base: Int): Int = TODO()
  * (например, str.toInt(base)), запрещается.
  */
 fun decimalFromString(str: String, base: Int): Int {
-    val getValue = mutableMapOf<Char, Int>()
-    "0123456789qwertyuiopasdfghjklzxcvbnm".toList().sorted().forEachIndexed { el, i -> getValue[i] = el }
     var result = 0.0
     str.forEachIndexed { i, element ->
-        val value = getValue[element]
-        if (value != null)
-            result += base.toDouble().pow(str.length - i - 1) * value
+        result += if (element.isDigit())
+            base.toDouble().pow(str.length - i - 1) * element.digitToInt()
+        else
+            base.toDouble().pow(str.length - i - 1) * element.code - 87
     }
     return result.toInt()
 }
@@ -437,8 +437,4 @@ fun russian(n: Int): String {
     return result.trim()
 
 
-}
-
-fun main() {
-    russian(1)
 }
