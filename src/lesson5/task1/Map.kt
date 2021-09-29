@@ -2,7 +2,6 @@
 
 package lesson5.task1
 
-import ru.spbstu.ktuples.Tuple
 import ru.spbstu.wheels.sorted
 
 // Урок 5: ассоциативные массивы и множества
@@ -111,7 +110,9 @@ fun buildGrades(grades: Map<String, Int>): Map<Int, List<String>> = TODO()
  *   containsIn(mapOf("a" to "z"), mapOf("a" to "z", "b" to "sweet")) -> true
  *   containsIn(mapOf("a" to "z"), mapOf("a" to "zee", "b" to "sweet")) -> false
  */
-fun containsIn(a: Map<String, String>, b: Map<String, String>): Boolean = TODO()
+fun containsIn(a: Map<String, String>, b: Map<String, String>): Boolean =
+    a.entries.containsAll(b.entries) || b.entries.containsAll(a.entries)
+
 
 /**
  * Простая (2 балла)
@@ -127,8 +128,7 @@ fun containsIn(a: Map<String, String>, b: Map<String, String>): Boolean = TODO()
  *   subtractOf(a = mutableMapOf("a" to "z"), mapOf("a" to "z"))
  *     -> a changes to mutableMapOf() aka becomes empty
  */
-fun subtractOf(a: MutableMap<String, String>, b: Map<String, String>) {
-    TODO()
+fun subtractOf(a: MutableMap<String, String>, b: Map<String, String>) = {
 }
 
 
@@ -306,10 +306,6 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
         }
     }
     return Pair(-1, -1)
-}
-
-fun main() {
-    println(findSumOfTwo(listOf(1, 2, 3), 4))
 }
 
 /**
