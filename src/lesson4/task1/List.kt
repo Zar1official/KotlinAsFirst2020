@@ -6,6 +6,7 @@ import lesson1.task1.discriminant
 import lesson5.task1.propagateHandshakes
 import lesson7.task1.deleteMarked
 import java.lang.NullPointerException
+import java.lang.StringBuilder
 import kotlin.math.pow
 import kotlin.math.sqrt
 
@@ -345,12 +346,10 @@ fun roman(n: Int): String {
  * 23964 = "двадцать три тысячи девятьсот шестьдесят четыре"
  */
 fun russian(n: Int): String {
-    var number = n.toString()
-    var digits = ""
+    val number = StringBuilder().append(n)
     for (i in 1..6 - number.length)
-        digits += "0"
-    number = digits + number
-    var result = ""
+        number.insert(0, 0)
+    val result = mutableListOf<String>()
     var flagHunds = false
     var flagTens = false
     number.forEachIndexed { i, elem ->
@@ -358,85 +357,86 @@ fun russian(n: Int): String {
             flagHunds = true
         if (i == 4 && elem.digitToInt() == 1)
             flagTens = true
-        result += when (i) {
-            0, 3 -> when (elem.digitToInt()) {
-                1 -> "сто "
-                2 -> "двести "
-                3 -> "триста "
-                4 -> "четыреста "
-                5 -> "пятьсот "
-                6 -> "шестьсот "
-                7 -> "семьсот "
-                8 -> "восемьсот "
-                9 -> "девятьсот "
+        result.add(
+            when (i) {
+                0, 3 -> when (elem.digitToInt()) {
+                    1 -> "сто"
+                    2 -> "двести"
+                    3 -> "триста"
+                    4 -> "четыреста"
+                    5 -> "пятьсот"
+                    6 -> "шестьсот"
+                    7 -> "семьсот"
+                    8 -> "восемьсот"
+                    9 -> "девятьсот"
+                    else -> ""
+                }
+
+                1, 4 -> when (elem.digitToInt()) {
+                    2 -> "двадцать"
+                    3 -> "тридцать"
+                    4 -> "сорок"
+                    5 -> "пятьдесят"
+                    6 -> "шестьдесят"
+                    7 -> "семьдесят"
+                    8 -> "восемьдесят"
+                    9 -> "девяносто"
+                    else -> ""
+                }
+
+                2 -> if (!flagHunds) when (elem.digitToInt()) {
+                    1 -> "одна тысяча"
+                    2 -> "две тысячи"
+                    3 -> "три тысячи"
+                    4 -> "четыре тысячи"
+                    5 -> "пять тысяч"
+                    6 -> "шесть тысяч"
+                    7 -> "семь тысяч"
+                    8 -> "восемь тысяч"
+                    9 -> "девять тысяч"
+                    else -> if (n.toString().length > 4) "тысяч" else ""
+
+                } else when (elem.digitToInt()) {
+                    1 -> "одиннадцать"
+                    2 -> "двенадцать"
+                    3 -> "тринадцать"
+                    4 -> "четырнадцать"
+                    5 -> "пятнадцать"
+                    6 -> "шестнадцать"
+                    7 -> "семнадцать"
+                    8 -> "восемнадцать"
+                    9 -> "девятнадцать"
+                    else -> "десять"
+                } + " тысяч"
+
+                5 -> if (!flagTens) when (elem.digitToInt()) {
+                    1 -> "один"
+                    2 -> "два"
+                    3 -> "три"
+                    4 -> "четыре"
+                    5 -> "пять"
+                    6 -> "шесть"
+                    7 -> "семь"
+                    8 -> "восемь"
+                    9 -> "девять"
+                    else -> ""
+                } else when (elem.digitToInt()) {
+                    1 -> "одиннадцать"
+                    2 -> "двенадцать"
+                    3 -> "тринадцать"
+                    4 -> "четырнадцать"
+                    5 -> "пятнадцать"
+                    6 -> "шестнадцать"
+                    7 -> "семнадцать"
+                    8 -> "восемнадцать"
+                    9 -> "девятнадцать"
+                    else -> "десять"
+                }
+
                 else -> ""
             }
-
-            1, 4 -> when (elem.digitToInt()) {
-                2 -> "двадцать "
-                3 -> "тридцать "
-                4 -> "сорок "
-                5 -> "пятьдесят "
-                6 -> "шестьдесят "
-                7 -> "семьдесят "
-                8 -> "восемьдесят "
-                9 -> "девяносто "
-                else -> ""
-            }
-
-            2 -> if (!flagHunds) when (elem.digitToInt()) {
-                1 -> "одна тысяча "
-                2 -> "две тысячи "
-                3 -> "три тысячи "
-                4 -> "четыре тысячи "
-                5 -> "пять тысяч "
-                6 -> "шесть тысяч "
-                7 -> "семь тысяч "
-                8 -> "восемь тысяч "
-                9 -> "девять тысяч "
-                else -> if (n.toString().length > 4) "тысяч " else ""
-
-            } else when (elem.digitToInt()) {
-                1 -> "одиннадцать"
-                2 -> "двенадцать"
-                3 -> "тринадцать"
-                4 -> "четырнадцать"
-                5 -> "пятнадцать"
-                6 -> "шестнадцать"
-                7 -> "семнадцать"
-                8 -> "восемнадцать"
-                9 -> "девятнадцать"
-                else -> "десять"
-            } + " тысяч "
-
-            5 -> if (!flagTens) when (elem.digitToInt()) {
-                1 -> "один"
-                2 -> "два"
-                3 -> "три"
-                4 -> "четыре"
-                5 -> "пять"
-                6 -> "шесть"
-                7 -> "семь"
-                8 -> "восемь"
-                9 -> "девять"
-                else -> ""
-            } else when (elem.digitToInt()) {
-                1 -> "одиннадцать"
-                2 -> "двенадцать"
-                3 -> "тринадцать"
-                4 -> "четырнадцать"
-                5 -> "пятнадцать"
-                6 -> "шестнадцать"
-                7 -> "семнадцать"
-                8 -> "восемнадцать"
-                9 -> "девятнадцать"
-                else -> "десять"
-            }
-
-            else -> ""
-        }
+        )
     }
-    return result.trim()
-
-
+    result.removeAll { it == "" }
+    return result.joinToString(" ")
 }
