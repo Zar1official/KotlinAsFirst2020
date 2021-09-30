@@ -271,10 +271,11 @@ fun decimalFromString(str: String, base: Int): Int {
         result += if (element.isDigit())
             base.toDouble().pow(str.length - i - 1) * element.digitToInt()
         else
-            base.toDouble().pow(str.length - i - 1) * element.code - 87
+            base.toDouble().pow(str.length - i - 1) * (element.code - 87)
     }
     return result.toInt()
 }
+
 
 
 /**
