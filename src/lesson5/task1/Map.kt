@@ -158,7 +158,16 @@ fun whoAreInBoth(a: List<String>, b: List<String>): List<String> = a.toSet().int
  *     mapOf("Emergency" to "911", "Police" to "02")
  *   ) -> mapOf("Emergency" to "112, 911", "Police" to "02")
  */
-fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<String, String> = TODO()
+fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<String, String> {
+    val result = mutableMapOf<String, String>()
+    mapA.forEach { (t, u) -> result += Pair(t, u) }
+    mapB.forEach { (t, u) ->
+        if (result.containsKey(t) && result[t] != u)
+            result[t] += ", $u"
+        else result += Pair(t, u)
+    }
+    return result
+}
 
 /**
  * Средняя (4 балла)
@@ -329,4 +338,18 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
  *     450
  *   ) -> emptySet()
  */
-fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> = TODO()
+fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> {
+    val result = mutableSetOf<String>()
+    var sum = 0
+    treasures.values.sortedBy { it.second / it.first }.reversed().forEach { pair ->
+        if (sum + pair.first <= capacity) {
+            result.add(treasures.keys.find { treasures[it] == pair }.toString())
+            sum += pair.first
+        }
+    }
+    return result
+}
+
+fun main() {
+
+}
