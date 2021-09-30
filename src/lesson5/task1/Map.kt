@@ -214,7 +214,6 @@ fun canBuildFrom(chars: List<Char>, word: String): Boolean =
     else word.toSortedSet().map { it.lowercase() } == chars.toSortedSet().map { it.lowercase() }
 
 
-
 /**
  * Средняя (4 балла)
  *
@@ -310,6 +309,9 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
  *   findSumOfTwo(listOf(1, 2, 3), 6) -> Pair(-1, -1)
  */
 fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
+    if (number == 0)
+        if (list.count { it == number } >= 2)
+            return Pair(list.first { it == 0 }, list.last { it == 0 })
     for (i in 0..number) {
         if (i in list && number - i in list) {
             val firstIndex = list.indexOf(i)
@@ -355,5 +357,7 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
 }
 
 fun main() {
-    println(canBuildFrom(listOf('a'), ""))
+    for (i in 0..0) {
+        println(i)
+    }
 }
