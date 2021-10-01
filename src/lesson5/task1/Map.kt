@@ -211,7 +211,9 @@ fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): S
 fun canBuildFrom(chars: List<Char>, word: String): Boolean =
     if (word.isEmpty())
         true
-    else word.toSortedSet().map { it.lowercase() } == chars.toSortedSet().map { it.lowercase() }
+    else chars.toSortedSet().map { it.lowercase() }.containsAll(word.toSortedSet().map { it.lowercase() })
+
+
 
 
 /**
@@ -357,7 +359,5 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
 }
 
 fun main() {
-    for (i in 0..0) {
-        println(i)
-    }
+    println(canBuildFrom(listOf('a', 'y'), "a"))
 }
