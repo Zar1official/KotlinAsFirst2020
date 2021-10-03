@@ -349,9 +349,11 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
     var sum = 0
     treasures.values.sortedBy { it.second / it.first }.reversed().forEach { pair ->
         if (sum + pair.first <= capacity) {
-            treasures.keys.forEach {
-                if (treasures[it] == pair && it !in result)
+            for (it in treasures.keys) {
+                if (treasures[it] == pair && it !in result) {
                     result.add(it)
+                    break
+                }
             }
             sum += pair.first
         }
