@@ -2,6 +2,11 @@
 
 package lesson6.task1
 
+import java.lang.Exception
+import java.lang.IllegalArgumentException
+import java.lang.IndexOutOfBoundsException
+import java.lang.Integer.max
+
 // Урок 6: разбор строк, исключения
 // Максимальное количество баллов = 13
 // Рекомендуемое количество баллов = 11
@@ -47,20 +52,20 @@ fun timeSecondsToStr(seconds: Int): String {
 /**
  * Пример: консольный ввод
  */
-fun main() {
-    println("Введите время в формате ЧЧ:ММ:СС")
-    val line = readLine()
-    if (line != null) {
-        val seconds = timeStrToSeconds(line)
-        if (seconds == -1) {
-            println("Введённая строка $line не соответствует формату ЧЧ:ММ:СС")
-        } else {
-            println("Прошло секунд с начала суток: $seconds")
-        }
-    } else {
-        println("Достигнут <конец файла> в процессе чтения строки. Программа прервана")
-    }
-}
+//fun main() {
+////    println("Введите время в формате ЧЧ:ММ:СС")
+////    val line = readLine()
+////    if (line != null) {
+////        val seconds = timeStrToSeconds(line)
+////        if (seconds == -1) {
+////            println("Введённая строка $line не соответствует формату ЧЧ:ММ:СС")
+////        } else {
+////            println("Прошло секунд с начала суток: $seconds")
+////        }
+////    } else {
+////        println("Достигнут <конец файла> в процессе чтения строки. Программа прервана")
+////    }
+//}
 
 
 /**
@@ -172,7 +177,25 @@ fun firstDuplicateIndex(str: String): Int {
  * или пустую строку при нарушении формата строки.
  * Все цены должны быть больше нуля либо равны нулю.
  */
-fun mostExpensive(description: String): String = TODO()
+fun mostExpensive(description: String): String {
+    var maxItemName = ""
+    var maxItemPrice = -1.0
+    try {
+        description.split("; ").map { it.split(" ") }.forEach {
+            if (it[1].toDouble() > maxItemPrice) {
+                maxItemPrice = it[1].toDouble()
+                maxItemName = it[0]
+            }
+        }
+    } catch (e: IndexOutOfBoundsException) {
+        return ""
+    }
+    return maxItemName
+}
+
+fun main() {
+    println(mostExpensive("Хлеб 39.1; Макароны 32.2"))
+}
 
 /**
  * Сложная (6 баллов)
@@ -223,4 +246,6 @@ fun fromRoman(roman: String): Int = TODO()
  * IllegalArgumentException должен бросаться даже если ошибочная команда не была достигнута в ходе выполнения.
  *
  */
-fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> = TODO()
+fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
+    TODO()
+}
