@@ -2,6 +2,7 @@
 
 package lesson7.task1
 
+import ru.spbstu.ktuples.placeholders._0
 import java.io.File
 
 // Урок 7: работа с файлами
@@ -63,7 +64,13 @@ fun alignFile(inputName: String, lineLength: Int, outputName: String) {
  * Подчёркивание в середине и/или в конце строк значения не имеет.
  */
 fun deleteMarked(inputName: String, outputName: String) {
-    TODO()
+    File(outputName).bufferedWriter().use {
+        File(inputName).readLines().forEach { str ->
+            if (str.isEmpty() || str.first() != '_')
+                it.appendLine(str)
+        }
+    }
+
 }
 
 /**
@@ -82,7 +89,7 @@ fun countSubstrings(inputName: String, substrings: List<String>): Map<String, In
     substrings.forEach { string ->
         var count = 0
         text.forEachIndexed { index, _ ->
-            if (index + string.length < text.length) {
+            if (index + string.length <= text.length) {
                 if (text.substring(index, index + string.length).lowercase() == string.lowercase())
                     count += 1
             }
