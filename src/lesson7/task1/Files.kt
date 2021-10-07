@@ -100,6 +100,7 @@ fun countSubstrings(inputName: String, substrings: List<String>): Map<String, In
 }
 
 fun main() {
+    markdownToHtmlSimple("input/substrings_in1.txt", "input/substrings_in1.txt")
 }
 
 
@@ -307,8 +308,40 @@ Suspendisse <s>et elit in enim tempus iaculis</s>.
  * (Отступы и переносы строк в примере добавлены для наглядности, при решении задачи их реализовывать не обязательно)
  */
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
-    TODO()
+    val result = StringBuilder()
+    File(inputName).bufferedReader().use {
+        val text = it
+            .readText()
+            .trim()
+            .replace(Regex("""\*{3}"""), "<b><i>")
+            .replace(Regex("""\*{2}"""), "<b>")
+            .replace(Regex("""\*"""), "<i>")
+            .replace(Regex("""~{2}"""), "<s>")
+            .replace(Regex("(<b>.*?)<b>"), "$1</b>")
+            .replace(Regex("(<i>.*?)<i>"), "$1</i>")
+            .replace(Regex("(<s>.*?)<s>"), "$1</s>")
+
+        for (i in text.split('\n')) {
+            if (i.isNotBlank())
+                result.append(i)
+            else
+                result.append("</p>\n").append("<p>")
+            result.appendLine()
+        }
+        result
+            .insert(0, "<p>\n")
+            .insert(result.lastIndex, "\n</p>")
+            .insert(0, "<body>\n")
+            .insert(0, "<html>\n")
+            .append("</body>\n")
+            .append("</html>")
+    }
+    File(outputName).bufferedWriter().use {
+        it.write(result.toString())
+    }
 }
+
+
 
 /**
  * Сложная (23 балла)
