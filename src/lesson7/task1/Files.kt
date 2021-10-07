@@ -310,18 +310,16 @@ Suspendisse <s>et elit in enim tempus iaculis</s>.
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
     val result = StringBuilder()
     File(inputName).bufferedReader().use {
-        val text = it
-            .readText()
-            .trim()
-            .replace(Regex("""\*{3}"""), "<b><i>")
-            .replace(Regex("""\*{2}"""), "<b>")
-            .replace(Regex("""\*"""), "<i>")
-            .replace(Regex("""~{2}"""), "<s>")
-            .replace(Regex("(<b>.*?)<b>"), "$1</b>")
-            .replace(Regex("(<i>.*?)<i>"), "$1</i>")
-            .replace(Regex("(<s>.*?)<s>"), "$1</s>")
+        val text = it.readText().trim()
         var flagBlank = false
         for (i in text.split('\n')) {
+            i.replace(Regex("""\*{3}"""), "<b><i>")
+                .replace(Regex("""\*{2}"""), "<b>")
+                .replace(Regex("""\*"""), "<i>")
+                .replace(Regex("""~{2}"""), "<s>")
+                .replace(Regex("(<b>.*?)<b>"), "$1</b>")
+                .replace(Regex("(<i>.*?)<i>"), "$1</i>")
+                .replace(Regex("(<s>.*?)<s>"), "$1</s>")
             if (i.isNotBlank()) {
                 flagBlank = false
                 result.append(i)
@@ -345,6 +343,8 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
     File(outputName).bufferedWriter().use {
         it.write(result.toString())
     }
+
+
 }
 
 
