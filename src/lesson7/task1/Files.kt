@@ -320,13 +320,19 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
             .replace(Regex("(<b>.*?)<b>"), "$1</b>")
             .replace(Regex("(<i>.*?)<i>"), "$1</i>")
             .replace(Regex("(<s>.*?)<s>"), "$1</s>")
-
+        var flagBlank = false
         for (i in text.split('\n')) {
-            if (i.isNotBlank())
+            if (i.isNotBlank()) {
+                flagBlank = false
                 result.append(i)
-            else
-                result.append("</p>\n").append("<p>")
-            result.appendLine()
+                result.appendLine()
+            } else {
+                if (!flagBlank) {
+                    result.append("</p>\n").append("<p>")
+                    result.appendLine()
+                }
+                flagBlank = true
+            }
         }
         result
             .insert(0, "<p>\n")
@@ -340,7 +346,6 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
         it.write(result.toString())
     }
 }
-
 
 
 /**
