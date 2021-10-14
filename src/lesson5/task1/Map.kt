@@ -336,18 +336,19 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
  *     450
  *   ) -> emptySet()
  */
+// first ver, sorry for cringe
 fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> {
-    val treasuresPricesTable = Array(treasures.size + 1) { Array(capacity) { 0 } }
-    val treasuresSetsTable = Array(treasures.size + 1) { Array(capacity) { mutableSetOf<String>() } }
+    val treasuresPricesTable = Array(treasures.size + 1) { Array(capacity + 1) { 0 } }
+    val treasuresSetsTable = Array(treasures.size + 1) { Array(capacity + 1) { mutableSetOf<String>() } }
     val listOfTreasuresValues = treasures.values.toList()
     val listOfTreasuresKeys = treasures.keys.toList()
     var maxSetOfTreasures = setOf<String>()
     var maxSumOfTreasures = 0
     for (i in 1 until treasures.size + 1) {
-        for (j in 1 until capacity) {
+        for (j in 1 until capacity + 1) {
             try {
                 val candidate = treasuresPricesTable[i - 1][j]
-                if (candidate > treasuresPricesTable[i][j] && candidate <= capacity) {
+                if (candidate > treasuresPricesTable[i][j]) {
                     treasuresPricesTable[i][j] = candidate
                     treasuresSetsTable[i][j].clear()
                     treasuresSetsTable[i][j].add(listOfTreasuresKeys[i - 2])
@@ -375,41 +376,9 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
         }
     }
     return maxSetOfTreasures
-
-
-//    for (i in 1 until treasures.size + 1) {
-//        for (j in 1 until capacity) {
-//            print(treasuresPricesSums[i][j])
-//        }
-//        println()
-//    }
-//
-//    for (i in 1 until treasures.size + 1) {
-//        for (j in 1 until capacity) {
-//            print(treasuresSetsResult[i][j])
-//        }
-//        println()
-//    }
-
 }
-//    val result = mutableSetOf<String>()
-//    var sum = 0
-//    for (pair in treasures.values.sortedBy { it.second / it.first }.reversed()) {
-//        if (sum + pair.first <= capacity) {
-//            for (it in treasures.keys) {
-//                if (treasures[it] == pair && it !in result) {
-//                    result.add(it)
-//                    sum += pair.first
-//                    break
-//                }
-//            }
-//        } else {
-//            break
-//        }
-//    }
-//    return result
 
 
 fun main() {
-    bagPacking(mapOf("ff" to Pair(10, 10), "ddf" to Pair(20, 20), "f" to Pair(10, 40)), 100)
+    println(bagPacking(mapOf("Кубок" to (2 to 1)), 2))
 }
