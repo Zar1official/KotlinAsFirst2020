@@ -228,11 +228,9 @@ fun canBuildFrom(chars: List<Char>, word: String): Boolean =
 fun extractRepeats(list: List<String>): Map<String, Int> {
     val repeats = mutableMapOf<String, Int>()
     list.forEach { elem ->
-        val count = list.count { elem == it }
-        if (count > 1)
-            repeats[elem] = count
+        repeats[elem] = repeats[elem]?.plus(1) ?: 1
     }
-    return repeats
+    return repeats.filter { it.value > 1 }
 }
 
 /**
@@ -363,5 +361,3 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
     TODO()
 }
 
-fun main() {
-}
