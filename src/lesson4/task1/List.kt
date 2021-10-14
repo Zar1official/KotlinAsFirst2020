@@ -277,7 +277,6 @@ fun decimalFromString(str: String, base: Int): Int {
 }
 
 
-
 /**
  * Сложная (5 баллов)
  *
@@ -287,7 +286,6 @@ fun decimalFromString(str: String, base: Int): Int {
  * Например: 23 = XXIII, 44 = XLIV, 100 = C
  */
 fun roman(n: Int): String {
-
     val units: String = when (n % 10) {
         1 -> "I"
         2 -> "II"
