@@ -2,7 +2,7 @@
 
 package lesson5.task1
 
-import ru.spbstu.wheels.sorted
+import java.lang.Exception
 
 // Урок 5: ассоциативные массивы и множества
 // Максимальное количество баллов = 14
@@ -315,30 +315,83 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
     return Pair(-1, -1)
 }
 
-    /**
-     * Очень сложная (8 баллов)
-     *
-     * Входными данными является ассоциативный массив
-     * "название сокровища"-"пара (вес сокровища, цена сокровища)"
-     * и вместимость вашего рюкзака.
-     * Необходимо вернуть множество сокровищ с максимальной суммарной стоимостью,
-     * которые вы можете унести в рюкзаке.
-     *
-     * Перед решением этой задачи лучше прочитать статью Википедии "Динамическое программирование".
-     *
-     * Например:
-     *   bagPacking(
-     *     mapOf("Кубок" to (500 to 2000), "Слиток" to (1000 to 5000)),
-     *     850
-     *   ) -> setOf("Кубок")
-     *   bagPacking(
-     *     mapOf("Кубок" to (500 to 2000), "Слиток" to (1000 to 5000)),
-     *     450
-     *   ) -> emptySet()
-     */
-    fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> {
-        TODO()
+/**
+ * Очень сложная (8 баллов)
+ *
+ * Входными данными является ассоциативный массив
+ * "название сокровища"-"пара (вес сокровища, цена сокровища)"
+ * и вместимость вашего рюкзака.
+ * Необходимо вернуть множество сокровищ с максимальной суммарной стоимостью,
+ * которые вы можете унести в рюкзаке.
+ *
+ * Перед решением этой задачи лучше прочитать статью Википедии "Динамическое программирование".
+ *
+ * Например:
+ *   bagPacking(
+ *     mapOf("Кубок" to (500 to 2000), "Слиток" to (1000 to 5000)),
+ *     850
+ *   ) -> setOf("Кубок")
+ *   bagPacking(
+ *     mapOf("Кубок" to (500 to 2000), "Слиток" to (1000 to 5000)),
+ *     450
+ *   ) -> emptySet()
+ */
+fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> {
+    val treasuresPricesTable = Array(treasures.size + 1) { Array(capacity) { 0 } }
+    val treasuresSetsTable = Array(treasures.size + 1) { Array(capacity) { mutableSetOf<String>() } }
+    val listOfTreasuresValues = treasures.values.toList()
+    val listOfTreasuresKeys = treasures.keys.toList()
+    var maxSetOfTreasures = setOf<String>()
+    var maxSumOfTreasures = 0
+    for (i in 1 until treasures.size + 1) {
+        for (j in 1 until capacity) {
+            try {
+                val candidate = treasuresPricesTable[i - 1][j]
+                if (candidate > treasuresPricesTable[i][j] && candidate <= capacity) {
+                    treasuresPricesTable[i][j] = candidate
+                    treasuresSetsTable[i][j].clear()
+                    treasuresSetsTable[i][j].add(listOfTreasuresKeys[i - 2])
+                }
+            } catch (e: ArrayIndexOutOfBoundsException) {
+            }
+
+            try {
+                val candidate =
+                    listOfTreasuresValues[i - 1].second + treasuresPricesTable[i - 1][j - listOfTreasuresValues[i - 1].first]
+                if (candidate > treasuresPricesTable[i][j]) {
+                    treasuresPricesTable[i][j] = candidate
+                    treasuresSetsTable[i][j].clear()
+                    treasuresSetsTable[i][j].add(listOfTreasuresKeys[i - 1])
+                    treasuresSetsTable[i][j] += (treasuresSetsTable[i - 1][j - listOfTreasuresValues[i - 1].first])
+                }
+            } catch (e: ArrayIndexOutOfBoundsException) {
+            }
+
+            if (treasuresPricesTable[i][j] > maxSumOfTreasures) {
+                maxSumOfTreasures = treasuresPricesTable[i][j]
+                maxSetOfTreasures = treasuresSetsTable[i][j]
+            }
+
+        }
     }
+    return maxSetOfTreasures
+
+
+//    for (i in 1 until treasures.size + 1) {
+//        for (j in 1 until capacity) {
+//            print(treasuresPricesSums[i][j])
+//        }
+//        println()
+//    }
+//
+//    for (i in 1 until treasures.size + 1) {
+//        for (j in 1 until capacity) {
+//            print(treasuresSetsResult[i][j])
+//        }
+//        println()
+//    }
+
+}
 //    val result = mutableSetOf<String>()
 //    var sum = 0
 //    for (pair in treasures.values.sortedBy { it.second / it.first }.reversed()) {
@@ -357,4 +410,6 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
 //    return result
 
 
-
+fun main() {
+    bagPacking(mapOf("ff" to Pair(10, 10), "ddf" to Pair(20, 20), "f" to Pair(10, 40)), 100)
+}
