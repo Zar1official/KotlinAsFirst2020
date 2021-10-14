@@ -267,7 +267,7 @@ fun decimal(digits: List<Int>, base: Int): Int = TODO()
 fun decimalFromString(str: String, base: Int): Int {
     var result = 0
     var baseF = 1
-    str.forEach {
+    str.reversed().forEach {
         val digit = if (it.isDigit()) it.digitToInt() else it.code - 'a'.code + 10
         result += digit * baseF
         baseF *= base
