@@ -6,7 +6,6 @@ import lesson1.task1.discriminant
 import lesson5.task1.propagateHandshakes
 import lesson7.task1.deleteMarked
 import java.lang.NullPointerException
-import java.lang.StringBuilder
 import kotlin.math.pow
 import kotlin.math.sqrt
 
@@ -266,14 +265,18 @@ fun decimal(digits: List<Int>, base: Int): Int = TODO()
  * (например, str.toInt(base)), запрещается.
  */
 fun decimalFromString(str: String, base: Int): Int {
-    var result = 0.0
-    str.forEachIndexed { i, element ->
-        result += if (element.isDigit())
-            base.toDouble().pow(str.length - i - 1) * element.digitToInt()
-        else
-            base.toDouble().pow(str.length - i - 1) * (element.code - 87)
+    var result = 0
+    var baseF = 1
+    str.forEach {
+        val digit = if (it.isDigit()) it.digitToInt() else it.code - 'a'.code + 10
+        result += digit * baseF
+        baseF *= base
     }
-    return result.toInt()
+    return result
+}
+
+fun main() {
+    println(decimalFromString("a", 16))
 }
 
 
