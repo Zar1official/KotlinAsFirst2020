@@ -207,12 +207,15 @@ fun top20Words(inputName: String): Map<String, Int> {
         }
     }
     val afterSortMap = top20Map.entries.sortedBy { it.value }.reversed()
-    for (index in afterSortMap.indices) {
-        if (index > 19)
-            if (afterSortMap[index - 1] != afterSortMap[index])
-                return afterSortMap.slice(0..index).toMap()
+    val resultMap = mutableMapOf<String, Int>()
+    afterSortMap.forEachIndexed { index, entry ->
+        if (index > 19) {
+            if (afterSortMap[index - 1].value != afterSortMap[index].value)
+                return resultMap
+        }
+        resultMap += entry.toPair()
     }
-    return mapOf()
+    return resultMap
 }
 
 fun main() {
