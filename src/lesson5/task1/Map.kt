@@ -2,8 +2,6 @@
 
 package lesson5.task1
 
-import java.lang.Exception
-
 // Урок 5: ассоциативные массивы и множества
 // Максимальное количество баллов = 14
 // Рекомендуемое количество баллов = 9
@@ -336,50 +334,42 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
  *     450
  *   ) -> emptySet()
  */
-
+// i am not rly good in sport programming, so i used this |
+//                                                        v
+// https://neerc.ifmo.ru/wiki/index.php?title=%D0%97%D0%B0%D0%B4%D0%B0%D1%87%D0%B0_%D0%BE_%D1%80%D1%8E%D0%BA%D0%B7%D0%B0%D0%BA%D0%B5#.D0.9D.D0.B5.D0.BE.D0.B3.D1.80.D0.B0.D0.BD.D0.B8.D1.87.D0.B5.D0.BD.D0.BD.D1.8B.D0.B9_.D1.80.D1.8E.D0.BA.D0.B7.D0.B0.D0.BA
 fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> {
-    val treasuresPricesTable = Array(treasures.size + 1) { Array(capacity + 1) { 0 } }
-    val treasuresSetsTable = Array(treasures.size + 1) { Array(capacity + 1) { mutableSetOf<String>() } }
-    val listOfTreasuresValues = treasures.values.toList()
-    val listOfTreasuresKeys = treasures.keys.toList()
-    var maxSetOfTreasures = setOf<String>()
-    var maxSumOfTreasures = 0
-    for (i in 1 until treasures.size + 1) {
-        for (j in 1 until capacity + 1) {
-            try {
-                val candidate = treasuresPricesTable[i - 1][j]
-                if (candidate > treasuresPricesTable[i][j]) {
-                    treasuresPricesTable[i][j] = candidate
-                    treasuresSetsTable[i][j].clear()
-                    treasuresSetsTable[i][j].add(listOfTreasuresKeys[i - 2])
-                }
-            } catch (e: ArrayIndexOutOfBoundsException) {
-            }
+    val values = treasures.values.toMutableList()
+    val keys = treasures.keys.toMutableList()
+    val size = values.size
+    val sumOfTreasuresTable = Array(size + 1) { Array(capacity + 1) { 0 } }
 
-            try {
-                val candidate =
-                    listOfTreasuresValues[i - 1].second + treasuresPricesTable[i - 1][j - listOfTreasuresValues[i - 1].first]
-                if (candidate > treasuresPricesTable[i][j]) {
-                    treasuresPricesTable[i][j] = candidate
-                    treasuresSetsTable[i][j].clear()
-                    treasuresSetsTable[i][j].add(listOfTreasuresKeys[i - 1])
-                    treasuresSetsTable[i][j] += (treasuresSetsTable[i - 1][j - listOfTreasuresValues[i - 1].first])
-                }
-            } catch (e: ArrayIndexOutOfBoundsException) {
-                continue
+    for (i in 1..size) {
+        for (j in 1..capacity) {
+            if (j >= values[i - 1].first) {
+                sumOfTreasuresTable[i][j] =
+                    maxOf(
+                        sumOfTreasuresTable[i - 1][j],
+                        sumOfTreasuresTable[i - 1][j - values[i - 1].first] + values[i - 1].second
+                    )
+            } else {
+                sumOfTreasuresTable[i][j] = sumOfTreasuresTable[i - 1][j]
             }
-
-            if (treasuresPricesTable[i][j] > maxSumOfTreasures) {
-                maxSumOfTreasures = treasuresPricesTable[i][j]
-                maxSetOfTreasures = treasuresSetsTable[i][j]
-            }
-
         }
     }
-    return maxSetOfTreasures
+    val treasuresNames = mutableSetOf<String>()
+    fun findAllTreasuresNames(i: Int, j: Int) {
+        if (sumOfTreasuresTable[i][j] == 0) return
+        if (sumOfTreasuresTable[i - 1][j] == sumOfTreasuresTable[i][j]) findAllTreasuresNames(i - 1, j)
+        else {
+            findAllTreasuresNames(i - 1, j - values[i - 1].first)
+            treasuresNames.add(keys[i - 1])
+        }
+    }
+    findAllTreasuresNames(size, capacity)
+    return treasuresNames
 }
 
 
 fun main() {
-    println(bagPacking(mapOf("Кубок" to (2 to 1), "dfjfj" to (2 to 2)), 2))
+    println(bagPacking(mapOf("dfkgvk" to Pair(2, 2), "dfkkgfrjgjg" to Pair(2, 3)), 2))
 }
