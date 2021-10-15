@@ -3,6 +3,7 @@
 package lesson7.task1
 
 import ru.spbstu.ktuples.placeholders._0
+import ru.spbstu.wheels.toMap
 import java.io.File
 import java.util.*
 
@@ -170,6 +171,7 @@ fun alignFileByWidth(inputName: String, outputName: String) {
     TODO()
 }
 
+
 /**
  * Средняя (14 баллов)
  *
@@ -190,7 +192,33 @@ fun alignFileByWidth(inputName: String, outputName: String) {
  * Ключи в ассоциативном массиве должны быть в нижнем регистре.
  *
  */
-fun top20Words(inputName: String): Map<String, Int> = TODO()
+fun top20Words(inputName: String): Map<String, Int> {
+    val top20Map = mutableMapOf<String, Int>()
+    File(inputName).bufferedReader().readLines().forEach {
+        val currentString = StringBuilder()
+        it.forEach { el ->
+            if (el.toString().matches(Regex("[ЁёА-Яа-яA-Za-z]")))
+                currentString.append(el.lowercase())
+            else
+                currentString.append(" ")
+        }
+        currentString.split(Regex("\\s+")).filter { d -> d.isNotBlank() }.forEach { s ->
+            top20Map[s] = top20Map[s]?.plus(1) ?: 1
+        }
+    }
+    val afterSortMap = top20Map.entries.sortedBy { it.value }.reversed()
+    for (index in afterSortMap.indices) {
+        if (index > 19)
+            if (afterSortMap[index - 1] != afterSortMap[index])
+                return afterSortMap.slice(0..index).toMap()
+    }
+    return mapOf()
+}
+
+fun main() {
+    println(top20Words("input/top20.txt"))
+}
+
 
 /**
  * Средняя (14 баллов)
@@ -305,42 +333,42 @@ Suspendisse <s>et elit in enim tempus iaculis</s>.
  * (Отступы и переносы строк в примере добавлены для наглядности, при решении задачи их реализовывать не обязательно)
  */
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
-    val result = StringBuilder()
-    File(inputName).bufferedReader().use {
-        val text = it.readText().trim()
-        var flagBlank = false
-        for (i in text.lines()) {
-            if (i.isNotBlank()) {
-                flagBlank = false
-                result.append(
-                    i.replace(Regex("""\*{3}"""), "<b><i>")
-                        .replace(Regex("""\*{2}"""), "<b>")
-                        .replace(Regex("""\*"""), "<i>")
-                        .replace(Regex("""~{2}"""), "<s>")
-                        .replace(Regex("(<b>.*?)<b>"), "$1</b>")
-                        .replace(Regex("(<i>.*?)<i>"), "$1</i>")
-                        .replace(Regex("(<s>.*?)<s>"), "$1</s>")
-                )
-                result.appendLine()
-            } else {
-                if (!flagBlank) {
-                    result.append("</p>\n").append("<p>")
-                    result.appendLine()
-                }
-                flagBlank = true
-            }
-        }
-        result
-            .insert(0, "<p>\n")
-            .insert(result.lastIndex, "\n</p>")
-            .insert(0, "<body>\n")
-            .insert(0, "<html>\n")
-            .append("</body>\n")
-            .append("</html>")
-    }
-    File(outputName).bufferedWriter().use {
-        it.write(result.toString())
-    }
+//    val result = StringBuilder()
+//    File(inputName).bufferedReader().use {
+//        val text = it.readText().trim()
+//        var flagBlank = false
+//        for (i in text.lines()) {
+//            if (i.isNotBlank()) {
+//                flagBlank = false
+//                result.append(
+//                    i.replace(Regex("""\*{3}"""), "<b><i>")
+//                        .replace(Regex("""\*{2}"""), "<b>")
+//                        .replace(Regex("""\*"""), "<i>")
+//                        .replace(Regex("""~{2}"""), "<s>")
+//                        .replace(Regex("(<b>.*?)<b>"), "$1</b>")
+//                        .replace(Regex("(<i>.*?)<i>"), "$1</i>")
+//                        .replace(Regex("(<s>.*?)<s>"), "$1</s>")
+//                )
+//                result.appendLine()
+//            } else {
+//                if (!flagBlank) {
+//                    result.append("</p>\n").append("<p>")
+//                    result.appendLine()
+//                }
+//                flagBlank = true
+//            }
+//        }
+//        result
+//            .insert(0, "<p>\n")
+//            .insert(result.lastIndex, "\n</p>")
+//            .insert(0, "<body>\n")
+//            .insert(0, "<html>\n")
+//            .append("</body>\n")
+//            .append("</html>")
+//    }
+//    File(outputName).bufferedWriter().use {
+//        it.write(result.toString())
+//    }
 
 }
 
@@ -512,7 +540,3 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
     TODO()
 }
 
-fun main() {
-
-
-}

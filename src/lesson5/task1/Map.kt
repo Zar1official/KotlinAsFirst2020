@@ -336,7 +336,7 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
  *     450
  *   ) -> emptySet()
  */
-// first ver, sorry for cringe
+
 fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> {
     val treasuresPricesTable = Array(treasures.size + 1) { Array(capacity + 1) { 0 } }
     val treasuresSetsTable = Array(treasures.size + 1) { Array(capacity + 1) { mutableSetOf<String>() } }
@@ -366,6 +366,7 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
                     treasuresSetsTable[i][j] += (treasuresSetsTable[i - 1][j - listOfTreasuresValues[i - 1].first])
                 }
             } catch (e: ArrayIndexOutOfBoundsException) {
+                continue
             }
 
             if (treasuresPricesTable[i][j] > maxSumOfTreasures) {
@@ -380,5 +381,5 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
 
 
 fun main() {
-    println(bagPacking(mapOf("Кубок" to (2 to 1)), 2))
+    println(bagPacking(mapOf("Кубок" to (2 to 1), "dfjfj" to (2 to 2)), 2))
 }
