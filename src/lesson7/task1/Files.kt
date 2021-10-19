@@ -4,6 +4,8 @@ package lesson7.task1
 
 import ru.spbstu.ktuples.placeholders._0
 import ru.spbstu.wheels.toMap
+import kotlinx.html.*
+import kotlinx.html.stream.appendHTML
 import java.io.File
 import java.util.*
 
@@ -218,10 +220,6 @@ fun top20Words(inputName: String): Map<String, Int> {
     return resultMap
 }
 
-fun main() {
-    println(top20Words("input/top20.txt"))
-}
-
 
 /**
  * Средняя (14 баллов)
@@ -335,7 +333,41 @@ Suspendisse <s>et elit in enim tempus iaculis</s>.
  *
  * (Отступы и переносы строк в примере добавлены для наглядности, при решении задачи их реализовывать не обязательно)
  */
+
+fun String.replaceTag(initial: String, replacement: String): String {
+    val result = StringBuilder()
+    var tagOpened = false
+    val listOfString = this.split(initial)
+    for ((index, i) in listOfString.withIndex()) {
+        if (index == listOfString.lastIndex) {
+            result.append(i)
+        } else if (i.isBlank()) {
+            result.append(replacement)
+            tagOpened = !tagOpened
+        } else if (!tagOpened)
+            result.append(i).append("<${replacement}>")
+        else
+            result.append(i).append("</$replacement>")
+        tagOpened = !tagOpened
+    }
+    return result.toString()
+}
+
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
+    val result = StringBuilder().append("<html><body>")
+    File(inputName).bufferedReader().readText().trim().split(Regex("\r?\n\r?\n")).forEach {
+        val paragraph = it
+            .replaceTag("~~", "s")
+            .replaceTag("**", "b")
+            .replaceTag("*", "i")
+        result.append("<p>${paragraph}</p>")
+    }
+    File(outputName).bufferedWriter().use {
+        it.write(result.append("</body></html>").toString())
+    }
+}
+
+
 //    val result = StringBuilder()
 //    File(inputName).bufferedReader().use {
 //        val text = it.readText().trim()
@@ -372,8 +404,6 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
 //    File(outputName).bufferedWriter().use {
 //        it.write(result.toString())
 //    }
-
-}
 
 
 /**
