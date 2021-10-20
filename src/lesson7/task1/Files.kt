@@ -359,6 +359,9 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
             .replaceTag("~~", "s")
             .replaceTag("**", "b")
             .replaceTag("*", "i")
+            .replace("<b> </b>", "<b></b>")
+            .replace("<i> </i>", "<i></i>")
+            .replace("<s> </s>", "<s></s>")
         result.append("<p>${paragraph}</p>")
     }
     File(outputName).bufferedWriter().use {
