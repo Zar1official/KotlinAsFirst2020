@@ -356,7 +356,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
     val result = StringBuilder().append("<html><body>")
     File(inputName).bufferedReader().readText().trim().split(Regex("\r?\n\r?\n"))
         .forEach {
-            if (it.isNotEmpty()) {
+            if (it.isNotBlank()) {
                 val paragraph = it
                     .replaceTag("~~", "s")
                     .replaceTag("**", "b")
@@ -375,11 +375,11 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
 
 //    val result = StringBuilder()
 //    File(inputName).bufferedReader().use {
-//        val text = it.readText().trim()
-//        var flagBlank = false
-//        for (i in text.lines()) {
-//            if (i.isNotBlank()) {
-//                flagBlank = false
+//        val ext = it.readText().trim()
+////        var flagBlank = false
+////        for (i in text.lines()) {
+////            if (i.isNotBlank()) {
+////              t  flagBlank = false
 //                result.append(
 //                    i.replace(Regex("""\*{3}"""), "<b><i>")
 //                        .replace(Regex("""\*{2}"""), "<b>")
