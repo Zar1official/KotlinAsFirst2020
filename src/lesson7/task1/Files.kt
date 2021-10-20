@@ -372,7 +372,7 @@ fun String.replaceTags(): String {
                         stack.push('i')
                     }
                 }
-            '~' -> if (this.getOrNull(index - 1) == '~') {
+            '~' -> if (this.getOrNull(index + 1) != '~' && this.getOrNull(index + 2) != '~') {
                 if ('~' in stack) {
                     result.append("</s>")
                     stack.remove('~')
