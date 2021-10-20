@@ -354,16 +354,19 @@ fun String.replaceTag(initial: String, replacement: String): String {
 
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
     val result = StringBuilder().append("<html><body>")
-    File(inputName).bufferedReader().readText().trim().split(Regex("\r?\n\r?\n")).forEach {
-        val paragraph = it
-            .replaceTag("~~", "s")
-            .replaceTag("**", "b")
-            .replaceTag("*", "i")
-            .replace("<b> </b>", "<b></b>")
-            .replace("<i> </i>", "<i></i>")
-            .replace("<s> </s>", "<s></s>")
-        result.append("<p>${paragraph}</p>")
-    }
+    File(inputName).bufferedReader().readText().trim().split(Regex("\r?\n\r?\n"))
+        .forEach {
+            if (it.isNotEmpty()) {
+                val paragraph = it
+                    .replaceTag("~~", "s")
+                    .replaceTag("**", "b")
+                    .replaceTag("*", "i")
+                    .replace("<b> </b>", "<b></b>")
+                    .replace("<i> </i>", "<i></i>")
+                    .replace("<s> </s>", "<s></s>")
+                result.append("<p>${paragraph}</p>")
+            }
+        }
     File(outputName).bufferedWriter().use {
         it.write(result.append("</body></html>").toString())
     }
