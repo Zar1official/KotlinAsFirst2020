@@ -334,22 +334,62 @@ Suspendisse <s>et elit in enim tempus iaculis</s>.
  * (Отступы и переносы строк в примере добавлены для наглядности, при решении задачи их реализовывать не обязательно)
  */
 
-fun String.replaceTag(initial: String, replacement: String): String {
+fun String.replaceTags(): String {
     val result = StringBuilder()
-    var tagOpened = false
-    val listOfString = this.split(initial)
-    for ((index, i) in listOfString.withIndex()) {
-        if (index == listOfString.lastIndex) {
-            result.append(i)
-        } else if (i.isBlank() && index == 0) {
-            result.append("<${replacement}>")
-        } else if (!tagOpened)
-            result.append(i).append("<${replacement}>")
-        else
-            result.append(i).append("</$replacement>")
-        tagOpened = !tagOpened
+    val stack = Stack<Char>()
+    this.forEachIndexed { index, i ->
+        when (i) {
+            '*' ->
+                if (this.getOrNull(index - 2) == i && this.getOrNull(index - 1) == i) {
+                    if ('b' in stack) {
+                        result.append("</b>")
+                        stack.remove('b')
+                    } else {
+                        result.append("<b>")
+                        stack.push('b')
+                    }
+                    if ('i' in stack) {
+                        result.append("</i>")
+                        stack.remove('i')
+                    } else {
+                        result.append("<i>")
+                        stack.push('i')
+                    }
+                } else if (this.getOrNull(index - 1) == i && this.getOrNull(index + 1) != i) {
+                    if ('b' in stack) {
+                        result.append("</b>")
+                        stack.remove('b')
+                    } else {
+                        result.append("<b>")
+                        stack.push('b')
+                    }
+                } else if (this.getOrNull(index - 1) != i && this.getOrNull(index + 1) != i) {
+                    if ('i' in stack) {
+                        result.append("</i>")
+                        stack.remove('i')
+                    } else {
+                        result.append("<i>")
+                        stack.push('i')
+                    }
+                }
+            '~' -> if (this.getOrNull(index - 1) == '~') {
+                if ('~' in stack) {
+                    result.append("</s>")
+                    stack.remove('~')
+                } else {
+                    result.append("<s>")
+                    stack.push('~')
+                }
+            }
+
+            else -> result.append(i)
+        }
     }
     return result.toString()
+}
+
+fun main() {
+    println("*f*kf*gkgk*".replaceTags())
 }
 
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
@@ -357,58 +397,13 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
     File(inputName).bufferedReader().readText().trim().split(Regex("\r?\n\r?\n"))
         .forEach {
             if (it.isNotBlank()) {
-                val paragraph = it
-                    .replaceTag("~~", "s")
-                    .replaceTag("**", "b")
-                    .replaceTag("*", "i")
-                    .replace("<b> </b>", "<b></b>")
-                    .replace("<i> </i>", "<i></i>")
-                    .replace("<s> </s>", "<s></s>")
-                result.append("<p>${paragraph}</p>")
+                result.append("<p>${it.replaceTags()}</p>")
             }
         }
     File(outputName).bufferedWriter().use {
         it.write(result.append("</body></html>").toString())
     }
 }
-
-
-//    val result = StringBuilder()
-//    File(inputName).bufferedReader().use {
-//        val ext = it.readText().trim()
-////        var flagBlank = false
-////        for (i in text.lines()) {
-////            if (i.isNotBlank()) {
-////              t  flagBlank = false
-//                result.append(
-//                    i.replace(Regex("""\*{3}"""), "<b><i>")
-//                        .replace(Regex("""\*{2}"""), "<b>")
-//                        .replace(Regex("""\*"""), "<i>")
-//                        .replace(Regex("""~{2}"""), "<s>")
-//                        .replace(Regex("(<b>.*?)<b>"), "$1</b>")
-//                        .replace(Regex("(<i>.*?)<i>"), "$1</i>")
-//                        .replace(Regex("(<s>.*?)<s>"), "$1</s>")
-//                )
-//                result.appendLine()
-//            } else {
-//                if (!flagBlank) {
-//                    result.append("</p>\n").append("<p>")
-//                    result.appendLine()
-//                }
-//                flagBlank = true
-//            }
-//        }
-//        result
-//            .insert(0, "<p>\n")
-//            .insert(result.lastIndex, "\n</p>")
-//            .insert(0, "<body>\n")
-//            .insert(0, "<html>\n")
-//            .append("</body>\n")
-//            .append("</html>")
-//    }
-//    File(outputName).bufferedWriter().use {
-//        it.write(result.toString())
-//    }
 
 
 /**
