@@ -341,9 +341,8 @@ fun String.replaceTag(initial: String, replacement: String): String {
     for ((index, i) in listOfString.withIndex()) {
         if (index == listOfString.lastIndex) {
             result.append(i)
-        } else if (i.isBlank()) {
-            result.append(replacement)
-            tagOpened = !tagOpened
+        } else if (i.isBlank() && index == 0) {
+            result.append("<${replacement}>")
         } else if (!tagOpened)
             result.append(i).append("<${replacement}>")
         else

@@ -232,6 +232,22 @@ Basic, Ruby, Swift.
         File("temp.txt").delete()
     }
 
+    private fun myTest() {
+        val result = File("temp.html").readText().replace(Regex("[\\s\\n\\t]"), "")
+        val expected =
+            """<html><body><p>,T^'N<b>5NDj<s>A5-r2</s>5K</b>Dgj]+H3]}<s>T6</s>3=T9GcAYC^<i></i>#mjx,YBR83<b><s>7l<i>&`?</i><i>EPRv`)</i>0<i>Xy[c;\\p+'</i>MZ<i>}JN[-}|,f%G</i>2<i>2</i>y4dl<i>3l#</i>|0f${'$'}</s>&</b>A<s>?;(rYWl.<i>]jGTQhcJmc</i>4<i>M=]c<b>P0!OUv:-h38</b>DOo(<b></b>q]QACc</i>_PC<b>D#z<i>gHJ,l</i>E_}O^i`<i>+sil</i>hbQ0t<i>H`yR`</i>D</b>Ol<b>_g)xq)9_;6oV,t<i>5l4/Q</i>yV<i>bx</i>ji]l.J%C'<i>:=1&\\s</i>c/E<i>T</i></b>?<i>NqD{vG2+<b>`9v</b>f<b>3</b>yaRbAo5;u<b>0@</b>Ha</i>.08\"9OlD;`<b>pi6bsb,1<i>ydH</i>}<i></i>.?!</b><b>=V</b>&%mZ)mB</s>Z`N`j}gw^4T.;XGTjqne^nyg1\\wqM-xL8(b!!+:t<s>'</s>?=7yD8%Be,ql%&d7QrxlI0IzRi_E\"S?yrou:b|8!KNZ`22CsqChfrz<b>Rf<s>4%{j<i>5</i>:AGB)2u1=B<i>QiN%e?`|RZ:qg;+s1JJ.Q592IlkY\";ufD(X7;=FeI</i>0EG=h}<i>8_ud3un\"TxIteok:sPrFK!D</i>r_Obmzuy%#sYGF=X-/0qUP-Q(kq8)tYUFWY</s>|Vskd2e/]]nqDA[${'$'}2</b>Hy\\4(s9\\j(M\"Ma8mM^Kmol5{_xqHBD</p><p>NSGTne<i></i>%<b>9y/</b>KH'873k<s>'(</s>L<b><s>;</s>:g{I4</b>OIdH-Xn<i>Y\"<s>`/y;</s>tZN</i>;I`<b>:y4g6\"<s>X<i>C</i>[lX0<i></i>7</s>I</b>HIF%<s>n</s>[<i>6&pt@V..rj<s>Bd</s>:3S</i><s>U-</s>&<i></i><b>.Qw/</b>qt<i><b>y<s>9</s>'2)!</b>cJ)</i>,<i>SS<s>1</s></i>=V<b>Sj]huP</b>'hy\\<i>'<b>!&</b>0xi<b>/</b>jp</i>I<b></b>${'$'}<b><i>DKi</i>[<i>rII!</i>LZ</b>7<i>Q\\<s></s>%f<b>n&</b>w<s>sru]|]</s>+<b></b>Ry<b>\"?<s>]</s>zNv</b>'R+<b>a8${'$'}</b>0Ms<b></b></i>A<s>BdIB<b></b>!i<i><b>#</b>=1<b>O?</b></i><i>I</i>|:lc<b><i>.;</i>2}</b>Obsc<b></b>]<i>Q</i>H`!<i></i>A3<b>wn)^</b>,(ZR</s>Z4<i>Q/<b>o</b>g<s><b>IgWn!skHK</b>r</s><s>w</s>@E<b>\\</b>j<s>ulo<b></b>P-<b>+w'</b>]gz3l==&<b>@/@</b>xmY8A</s>;</i>0K<i>zMm=x<s>c&<b>${'$'}\\</b>K&8F;]</s>0O<s></s>Y/</i>PI</p></body></html>""".trimIndent()
+                .replace(Regex("[\\s\\n\\t]"), "")
+        assertEquals(expected, result)
+
+        File("temp.html").delete()
+    }
+
+    @Test
+    fun markdownToHtmlSimpleMyTest(){
+        markdownToHtmlSimple("input/markdowntest.md", "temp.html")
+        myTest()
+    }
+
 
     private fun checkHtmlSimpleExample() {
         val result = File("temp.html").readText().replace(Regex("[\\s\\n\\t]"), "")
