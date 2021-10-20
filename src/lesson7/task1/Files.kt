@@ -401,7 +401,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
             }
         }
     File(outputName).bufferedWriter().use {
-        it.write(result.append("</body></html>").toString())
+        it.write(result.append("</body></html>").toString().replace("<p></p>", ""))
     }
 }
 
