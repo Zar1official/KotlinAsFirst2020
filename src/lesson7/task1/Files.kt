@@ -401,17 +401,19 @@ fun main() {
 // не понимаю как фиксить. должно все работать.
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
     val result = StringBuilder().append("<html><body>")
-    File(inputName).bufferedReader().readText().replace("\t", "").trim().split(Regex("\r?\n\r?\n")).forEach {
-        if (it.isNotEmpty()) {
-            result.append("<p>${it.replaceTags()}</p>")
-        } else {
-            result.append(it.replaceTags())
-        }
+    val text = File(inputName).bufferedReader().readText()
+    if (text.isEmpty())
+        result.append("<p></p>")
+    else {
+        text.replace("\t", "").trim().split(Regex("\r?\n\r?\n"))
+            .forEach {
+                if (it.isNotEmpty())
+                    result.append("<p>${it.replaceTags()}</p>")
+            }
     }
     File(outputName).bufferedWriter().use {
         it.write(result.append("</body>").append("</html>").toString())
     }
-
 }
 
 
