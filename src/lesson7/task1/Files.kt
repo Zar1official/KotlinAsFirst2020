@@ -404,10 +404,10 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
     File(inputName).bufferedReader().readLines().forEach {
         if (it.isEmpty()) {
             result.append("</p>")
-            isParagraphOpened = !isParagraphOpened
+            isParagraphOpened = false
         } else if (!isParagraphOpened) {
             result.append("<p>")
-            isParagraphOpened = !isParagraphOpened
+            isParagraphOpened = true
         }
         if (isParagraphOpened) {
             result.append(it.replaceTags())
