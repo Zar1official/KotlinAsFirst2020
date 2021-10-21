@@ -376,7 +376,7 @@ fun String.replaceTags(): String {
                         stack.push('i')
                     }
                 }
-            '~' -> if (this.getOrNull(index + 1) != '~' && this.getOrNull(index + 2) != '~') {
+            '~' -> if (this.getOrNull(index + 1) == '~') {
                 if ('~' in stack) {
                     result.append("</s>")
                     stack.remove('~')
@@ -395,6 +395,7 @@ fun String.replaceTags(): String {
 fun main() {
     println("*f*kf*gkgk*".replaceTags())
     println("**fkgkfg**~~f*k*g~~".replaceTags())
+
 }
 
 // не понимаю как фиксить. должно все работать.
