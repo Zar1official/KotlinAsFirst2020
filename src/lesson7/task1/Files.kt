@@ -87,15 +87,19 @@ fun deleteMarked(inputName: String, outputName: String) {
  *
  */
 fun countSubstrings(inputName: String, substrings: List<String>): Map<String, Int> {
-    val reader = File(inputName).reader()
-    val text = reader.readText()
+    val reader = File(inputName).bufferedReader()
+    val text = reader.readText().lowercase()
     val result = mutableMapOf<String, Int>()
     substrings.forEach { string ->
         var count = 0
-        text.forEachIndexed { index, _ ->
-            if (index + string.length <= text.length) {
-                if (text.substring(index, index + string.length).lowercase() == string.lowercase())
-                    count += 1
+        var i = 0
+        while (i < text.length) {
+            val goTo = text.indexOf(string, i, true)
+            if (goTo != -1) {
+                count++
+                i = goTo + 1
+            } else {
+                i++
             }
         }
         result[string] = count
@@ -205,7 +209,7 @@ fun top20Words(inputName: String): Map<String, Int> {
                 currentString.append(" ")
         }
         currentString.split(Regex("\\s+")).filter { d -> d.isNotBlank() }.forEach { s ->
-            top20Map[s] = top20Map[s]?.plus(1) ?: 1
+            top20Map[s] = top20Map.getOrDefault(s, 0) + 1
         }
     }
     val afterSortMap = top20Map.entries.sortedBy { it.value }.reversed()
@@ -396,12 +400,10 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
     val result = StringBuilder().append("<html><body>")
     File(inputName).bufferedReader().readText().trim().split(Regex("\r?\n\r?\n"))
         .forEach {
-            if (it.isNotBlank()) {
-                result.append("<p>${it.replaceTags()}</p>")
-            }
+            result.append("<p>${it.replaceTags()}</p>")
         }
     File(outputName).bufferedWriter().use {
-        it.write(result.append("</body></html>").toString().replace("<p></p>", ""))
+        it.write(result.append("</body></html>").toString())
     }
 }
 
