@@ -395,7 +395,7 @@ fun String.replaceTags(): String {
 fun main() {
     println("*f*kf*gkgk*".replaceTags())
 }
-
+// не могу понять где ошибка
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
     val result = StringBuilder().append("<html><body>")
     File(inputName).bufferedReader().readText().trim().split(Regex("\r?\n\r?\n"))
