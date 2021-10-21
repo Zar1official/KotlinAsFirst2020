@@ -397,12 +397,12 @@ fun main() {
     println("**fkgkfg**~~f*k*g~~".replaceTags())
 }
 
-// не могу понять где ошибка
+
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
     val result = StringBuilder().append("<html><body><p>")
     var isParagraphOpened = true
     File(inputName).bufferedReader().readLines().forEach {
-        if (it.isBlank()) {
+        if (it.isEmpty()) {
             result.append("</p>")
             isParagraphOpened = !isParagraphOpened
         } else if (!isParagraphOpened) {
