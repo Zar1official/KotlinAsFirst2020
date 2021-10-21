@@ -401,7 +401,7 @@ fun main() {
 // не понимаю как фиксить. должно все работать.
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
     val result = StringBuilder().append("<html><body>")
-    File(inputName).bufferedReader().readText().trim().split(Regex("\r?\n\r?\n")).forEach {
+    File(inputName).bufferedReader().readText().replace("\t", "\n").trim().split(Regex("\r?\n\r?\n")).forEach {
         if (it.isNotEmpty()) {
             result.append("<p>${it.replaceTags()}</p>")
         } else {
