@@ -403,6 +403,8 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
     File(inputName).bufferedReader().readText().trim().split(Regex("\r?\n\r?\n")).forEach {
         if (it.isNotEmpty()) {
             result.append("<p>${it.replaceTags()}</p>")
+        } else {
+            result.append(it.replaceTags())
         }
     }
     File(outputName).bufferedWriter().use {
