@@ -394,17 +394,29 @@ fun String.replaceTags(): String {
 
 fun main() {
     println("*f*kf*gkgk*".replaceTags())
+    println("**fkgkfg**~~f*k*g~~".replaceTags())
 }
+
 // не могу понять где ошибка
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
-    val result = StringBuilder().append("<html><body>")
-    File(inputName).bufferedReader().readText().trim().split(Regex("\r?\n\r?\n"))
-        .forEach {
-            result.append("<p>${it.replaceTags()}</p>")
+    val result = StringBuilder().append("<html><body><p>")
+    var isParagraphOpened = true
+    File(inputName).bufferedReader().readLines().forEach {
+        if (it.isBlank()) {
+            result.append("</p>")
+            isParagraphOpened = !isParagraphOpened
+        } else if (!isParagraphOpened) {
+            result.append("<p>")
+            isParagraphOpened = !isParagraphOpened
         }
-    File(outputName).bufferedWriter().use {
-        it.write(result.append("</body></html>").toString())
+        if (isParagraphOpened) {
+            result.append(it.replaceTags())
+        }
     }
+    File(outputName).bufferedWriter().use {
+        it.write(result.append("</p>").append("</body>").append("</html>").toString())
+    }
+
 }
 
 
