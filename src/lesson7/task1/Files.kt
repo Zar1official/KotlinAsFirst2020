@@ -397,24 +397,16 @@ fun main() {
     println("**fkgkfg**~~f*k*g~~".replaceTags())
 }
 
-
+// не понимаю как фиксить. должно все работать.
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
-    val result = StringBuilder().append("<html><body><p>")
-    var isParagraphOpened = true
-    File(inputName).bufferedReader().readLines().forEach {
-        if (it.isEmpty()) {
-            result.append("</p>")
-            isParagraphOpened = false
-        } else if (!isParagraphOpened) {
-            result.append("<p>")
-            isParagraphOpened = true
-        }
-        if (isParagraphOpened) {
-            result.append(it.replaceTags())
+    val result = StringBuilder().append("<html><body>")
+    File(inputName).bufferedReader().readText().trim().split(Regex("\r?\n\r?\n")).forEach {
+        if (it.isNotEmpty()) {
+            result.append("<p>${it.replaceTags()}</p>")
         }
     }
     File(outputName).bufferedWriter().use {
-        it.write(result.append("</p>").append("</body>").append("</html>").toString())
+        it.write(result.append("</body>").append("</html>").toString())
     }
 
 }
