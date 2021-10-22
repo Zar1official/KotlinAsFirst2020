@@ -341,10 +341,11 @@ Suspendisse <s>et elit in enim tempus iaculis</s>.
 fun String.replaceTags(): String {
     val result = StringBuilder()
     val stack = Stack<Char>()
-    this.forEachIndexed { index, i ->
-        when (i) {
+    var index = 0
+    while (index < this.length) {
+        when (this[index]) {
             '*' ->
-                if (this.getOrNull(index - 2) == i && this.getOrNull(index - 1) == i) {
+                if (this.getOrNull(index + 2) == this[index] && this.getOrNull(index + 1) == this[index]) {
                     if ('b' in stack) {
                         result.append("</b>")
                         stack.remove('b')
@@ -359,7 +360,8 @@ fun String.replaceTags(): String {
                         result.append("<i>")
                         stack.push('i')
                     }
-                } else if (this.getOrNull(index - 1) == i && this.getOrNull(index + 1) != i) {
+                    index += 3
+                } else if (this.getOrNull(index + 1) == this[index]) {
                     if ('b' in stack) {
                         result.append("</b>")
                         stack.remove('b')
@@ -367,7 +369,8 @@ fun String.replaceTags(): String {
                         result.append("<b>")
                         stack.push('b')
                     }
-                } else if (this.getOrNull(index - 1) != i && this.getOrNull(index + 1) != i) {
+                    index += 2
+                } else {
                     if ('i' in stack) {
                         result.append("</i>")
                         stack.remove('i')
@@ -375,6 +378,7 @@ fun String.replaceTags(): String {
                         result.append("<i>")
                         stack.push('i')
                     }
+                    index++
                 }
             '~' -> if (this.getOrNull(index + 1) == '~') {
                 if ('~' in stack) {
@@ -384,13 +388,18 @@ fun String.replaceTags(): String {
                     result.append("<s>")
                     stack.push('~')
                 }
+                index += 2
             }
 
-            else -> result.append(i)
+            else -> {
+                result.append(this[index])
+                index++
+            }
         }
     }
     return result.toString()
 }
+
 
 fun main() {
     println("*f*kf*gkgk*".replaceTags())
