@@ -397,15 +397,6 @@ fun String.replaceTags(): String {
             }
         }
     }
-    println(stack)
-    for (i in stack) {
-        return when (i) {
-            'b' -> result.toString().replace("<b>", "**")
-            'i' -> result.toString().replace("<i>", "*")
-            '~' -> result.toString().replace("<s>", "~~")
-            else -> result.toString()
-        }
-    }
     return result.toString()
 }
 
