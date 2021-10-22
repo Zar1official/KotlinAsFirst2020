@@ -407,19 +407,17 @@ fun main() {
 }
 
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
-    val result = StringBuilder().append("<html><body>")
-    val text = File(inputName).bufferedReader().readText()
-    if (text.isEmpty())
-        result.append("<p></p>")
-    else {
-        text.trim().split(Regex("\r?\n\r?\n"))
-            .forEach {
-                if (it.isNotEmpty())
-                    result.append("<p>${it.replaceTags()}</p>")
-            }
+    val result = StringBuilder().append("<html><body><p>")
+    val lines = File(inputName).bufferedReader().readLines()
+    lines.forEachIndexed { index, s ->
+        if (s.trim().isEmpty() && lines[index - 1].trim().isNotEmpty() && index != 0 && index != lines.lastIndex) {
+            result.append("</p><p>")
+        } else {
+            result.append(s.replaceTags())
+        }
     }
     File(outputName).bufferedWriter().use {
-        it.write(result.append("</body>").append("</html>").toString())
+        it.write(result.append("</p></body></html>").toString())
     }
 }
 
