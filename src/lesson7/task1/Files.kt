@@ -402,7 +402,8 @@ fun String.replaceTags(): String {
         return when (i) {
             'b' -> result.toString().replace("<b>", "**")
             'i' -> result.toString().replace("<i>", "*")
-            else -> result.toString().replace("<s>", "~~")
+            '~' -> result.toString().replace("<s>", "~~")
+            else -> result.toString()
         }
     }
     return result.toString()
