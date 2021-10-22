@@ -397,13 +397,20 @@ fun String.replaceTags(): String {
             }
         }
     }
+    println(stack)
+    for (i in stack) {
+        return when (i) {
+            'b' -> result.toString().replace("<b>", "**")
+            'i' -> result.toString().replace("<i>", "*")
+            else -> result.toString().replace("<s>", "~~")
+        }
+    }
     return result.toString()
 }
 
 
 fun main() {
     println("**".replaceTags())
-    println("**fkgkfg**~~f*k*g~~".replaceTags())
 
 }
 
