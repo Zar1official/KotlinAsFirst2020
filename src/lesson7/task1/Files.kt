@@ -343,7 +343,7 @@ fun String.replaceTags(): String {
         if (string.indexOf("~~") != -1) {
             if ("s" in stack) {
                 string = string.replaceFirst("~~", "</s>")
-                stack.remove("s")
+                stack.removeAll(listOf("s"))
             } else {
                 string = string.replaceFirst("~~", "<s>")
                 stack.push("s")
@@ -352,7 +352,7 @@ fun String.replaceTags(): String {
             index = string.indexOf("*", index)
             if ("i" in stack) {
                 string = string.replaceFirst("*", "</i>")
-                stack.remove("i")
+                stack.removeAll(listOf("i"))
             } else {
                 string = string.replaceFirst("*", "<i>")
                 stack.push("i")
@@ -361,23 +361,23 @@ fun String.replaceTags(): String {
             index = string.indexOf("**", index)
             if ("b" in stack) {
                 string = string.replaceFirst("**", "</b>")
-                stack.remove("b")
+                stack.removeAll(listOf("b"))
             } else {
                 string = string.replaceFirst("**", "<b>")
                 stack.push("b")
             }
-        } else if ("bi" in stack || ("i" in stack && "b" in stack) && string.indexOf("***", index) != -1) {
+        } else if ("bi" in stack || ("i" in stack && "b" in stack)) {
             index = indexOf("***", index)
             stack.clear()
             string = string.replaceFirst("***", "</b></i>")
         } else {
+            stack.clear()
             index = indexOf("***", index)
             stack.push("i")
             stack.push("b")
             stack.push("bi")
             string = string.replaceFirst("***", "<b><i>")
         }
-
     }
     return string
 }
