@@ -342,10 +342,18 @@ fun String.replaceTags(): String {
     val result = StringBuilder()
     val stack = Stack<String>()
     var index = 0
-    while (index < this.length) {
-        when (this[index]) {
+    val replacement = listOf("<s>", "</s>")
+    var counter = 0
+    var a = this
+    while (a.contains("~~")) {
+        a = a.replaceFirst("~~", replacement[counter % 2])
+        counter++
+        println(a)
+    }
+    while (index < a.length) {
+        when (a[index]) {
             '*' ->
-                if (this.getOrNull(index + 2) == this[index] && this.getOrNull(index + 1) == this[index]) {
+                if (a.getOrNull(index + 2) == a[index] && a.getOrNull(index + 1) == a[index]) {
                     if ("b" in stack && "i" in stack) {
                         stack.remove("b")
                         stack.remove("i")
@@ -361,7 +369,7 @@ fun String.replaceTags(): String {
                         stack.push("bi")
                     }
                     index += 3
-                } else if (this.getOrNull(index + 1) == this[index]) {
+                } else if (a.getOrNull(index + 1) == a[index]) {
                     if ("b" in stack) {
                         result.append("</b>")
                         stack.push("bi")
@@ -384,19 +392,8 @@ fun String.replaceTags(): String {
                     }
                     index++
                 }
-            '~' -> if (this.getOrNull(index + 1) == this[index]) {
-                if ("s" in stack) {
-                    result.append("</s>")
-                    stack.remove("s")
-                } else {
-                    result.append("<s>")
-                    stack.push("s")
-                }
-                index += 2
-            }
-
             else -> {
-                result.append(this[index])
+                result.append(a[index])
                 index++
             }
         }
@@ -404,9 +401,8 @@ fun String.replaceTags(): String {
     return result.toString()
 }
 
-
 fun main() {
-    println("**".replaceTags())
+
 
 }
 
@@ -589,6 +585,8 @@ fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
  * Используемые пробелы, отступы и дефисы должны в точности соответствовать примеру.
  *
  */
+
+
 fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
     TODO()
 }
