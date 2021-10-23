@@ -383,8 +383,9 @@ fun String.replaceTags(): String {
 }
 
 fun main() {
-
-
+    println("** **kfgk ***".replaceTags())
+    println("***kfgk ***".replaceTags())
+    println("**".replaceTags())
 }
 
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
