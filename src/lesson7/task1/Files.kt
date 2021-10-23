@@ -334,73 +334,71 @@ Suspendisse <s>et elit in enim tempus iaculis</s>.
  * (Отступы и переносы строк в примере добавлены для наглядности, при решении задачи их реализовывать не обязательно)
  */
 
-fun String.replaceTags(): String {
-    val stack = Stack<String>()
-    var index = 0
-    var string = this
-    while (string.indexOf("*") != -1 || string.indexOf("~~") != -1) {
-        println(string)
-        if (string.indexOf("~~") != -1) {
-            if ("s" in stack) {
-                string = string.replaceFirst("~~", "</s>")
-                stack.removeAll(listOf("s"))
-            } else {
-                string = string.replaceFirst("~~", "<s>")
-                stack.push("s")
-            }
-        } else if (string.indexOf("*", index) != string.indexOf("**", index) && string.indexOf("*", index) != -1) {
-            index = string.indexOf("*", index)
-            if ("i" in stack) {
-                string = string.replaceFirst("*", "</i>")
-                stack.removeAll(listOf("i"))
-            } else {
-                string = string.replaceFirst("*", "<i>")
-                stack.push("i")
-            }
-        } else if (string.indexOf("**", index) != string.indexOf("***", index) && string.indexOf("**", index) != -1) {
-            index = string.indexOf("**", index)
-            if ("b" in stack) {
-                string = string.replaceFirst("**", "</b>")
-                stack.removeAll(listOf("b"))
-            } else {
-                string = string.replaceFirst("**", "<b>")
-                stack.push("b")
-            }
-        } else if ("bi" in stack || ("i" in stack && "b" in stack)) {
-            index = indexOf("***", index)
-            stack.clear()
-            string = string.replaceFirst("***", "</b></i>")
-        } else {
-            stack.clear()
-            index = indexOf("***", index)
-            stack.push("i")
-            stack.push("b")
-            stack.push("bi")
-            string = string.replaceFirst("***", "<b><i>")
-        }
-    }
-    return string
-}
+//fun String.replaceTags(): String {
+//    val stack = Stack<String>()
+//    var index = 0
+//    var string = this
+//    while (string.indexOf("*") != -1 || string.indexOf("~~") != -1) {
+//        if (string.indexOf("~~") != -1) {
+//            if ("s" in stack) {
+//                string = string.replaceFirst("~~", "</s>")
+//                stack.removeAll(listOf("s"))
+//            } else {
+//                string = string.replaceFirst("~~", "<s>")
+//                stack.push("s")
+//            }
+//        } else if (string.indexOf("*", index) != string.indexOf("**", index) && string.indexOf("*", index) != -1) {
+//            index = string.indexOf("*", index)
+//            if ("i" in stack) {
+//                string = string.replaceFirst("*", "</i>")
+//                stack.removeAll(listOf("i"))
+//            } else {
+//                string = string.replaceFirst("*", "<i>")
+//                stack.push("i")
+//            }
+//        } else if (string.indexOf("**", index) != string.indexOf("***", index) && string.indexOf("**", index) != -1) {
+//            index = string.indexOf("**", index)
+//            if ("b" in stack) {
+//                string = string.replaceFirst("**", "</b>")
+//                stack.removeAll(listOf("b"))
+//            } else {
+//                string = string.replaceFirst("**", "<b>")
+//                stack.push("b")
+//            }
+//        } else if ("bi" in stack || ("i" in stack && "b" in stack)) {
+//            index = indexOf("***", index)
+//            stack.clear()
+//            string = string.replaceFirst("***", "</b></i>")
+//        } else {
+//            stack.clear()
+//            index = indexOf("***", index)
+//            stack.push("i")
+//            stack.push("b")
+//            stack.push("bi")
+//            string = string.replaceFirst("***", "<b><i>")
+//        }
+//    }
+//    return string
+//}
 
 fun main() {
-    println("** **kfgk ***".replaceTags())
-    println("***kfgk ***".replaceTags())
-    println("**".replaceTags())
+//    println(")vf4IKM9)Z6Pm9r;&Zq~~L7MUN-Sl*{~~Bbm;%P.|0:rp:rB8`V`d{92**hY**Mq^c/0W]7-Zs,?}B;~~\\tPgQ1W:Y,jba7~~v/~~Qb~~9F?L~~[Y".replaceTags())
 }
 
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
-    val result = StringBuilder().append("<html><body><p>")
-    val lines = File(inputName).bufferedReader().readLines()
-    lines.forEachIndexed { index, s ->
-        if (s.trim().isEmpty() && lines[index - 1].trim().isNotEmpty() && index != 0 && index != lines.lastIndex) {
-            result.append("</p><p>")
-        } else {
-            result.append(s.replaceTags())
-        }
-    }
-    File(outputName).bufferedWriter().use {
-        it.write(result.append("</p></body></html>").toString())
-    }
+//    val result = StringBuilder().append("<html><body><p>")
+//    val lines = File(inputName).bufferedReader().readLines()
+//    lines.forEachIndexed { index, s ->
+//        if (s.trim().isEmpty() && lines[index - 1].trim().isNotEmpty() && index != 0 && index != lines.lastIndex) {
+//            result.append("</p><p>")
+//        } else {
+//            result.append(s.replaceTags())
+//        }
+//    }
+//    File(outputName).bufferedWriter().use {
+//        it.write(result.append("</p></body></html>").toString())
+//    }
+    TODO()
 }
 
 
