@@ -2,10 +2,6 @@
 
 package lesson7.task1
 
-import ru.spbstu.ktuples.placeholders._0
-import ru.spbstu.wheels.toMap
-import kotlinx.html.*
-import kotlinx.html.stream.appendHTML
 import java.io.File
 import java.util.*
 
@@ -339,66 +335,51 @@ Suspendisse <s>et elit in enim tempus iaculis</s>.
  */
 
 fun String.replaceTags(): String {
-    val result = StringBuilder()
     val stack = Stack<String>()
     var index = 0
-    val replacement = listOf("<s>", "</s>")
-    var counter = 0
-    var a = this
-    while (a.contains("~~")) {
-        a = a.replaceFirst("~~", replacement[counter % 2])
-        counter++
-        println(a)
-    }
-    while (index < a.length) {
-        when (a[index]) {
-            '*' ->
-                if (a.getOrNull(index + 2) == a[index] && a.getOrNull(index + 1) == a[index]) {
-                    if ("b" in stack && "i" in stack) {
-                        stack.remove("b")
-                        stack.remove("i")
-                        if ("bi" in stack)
-                            result.append("</i></b>")
-                        else
-                            result.append("</b></i>")
-                        stack.remove("bi")
-                    } else {
-                        result.append("<b><i>")
-                        stack.push("b")
-                        stack.push("i")
-                        stack.push("bi")
-                    }
-                    index += 3
-                } else if (a.getOrNull(index + 1) == a[index]) {
-                    if ("b" in stack) {
-                        result.append("</b>")
-                        stack.push("bi")
-                        stack.remove("b")
-                    } else {
-                        result.append("<b>")
-                        stack.push("b")
-                        stack.remove("bi")
-                    }
-                    index += 2
-                } else {
-                    if ("i" in stack) {
-                        result.append("</i>")
-                        stack.remove("i")
-                        stack.remove("bi")
-                    } else {
-                        result.append("<i>")
-                        stack.push("bi")
-                        stack.push("i")
-                    }
-                    index++
-                }
-            else -> {
-                result.append(a[index])
-                index++
+    var string = this
+    while (string.indexOf("*") != -1 || string.indexOf("~~") != -1) {
+        println(string)
+        if (string.indexOf("~~") != -1) {
+            if ("s" in stack) {
+                string = string.replaceFirst("~~", "</s>")
+                stack.remove("s")
+            } else {
+                string = string.replaceFirst("~~", "<s>")
+                stack.push("s")
             }
+        } else if (string.indexOf("*", index) != string.indexOf("**", index) && string.indexOf("*", index) != -1) {
+            index = string.indexOf("*", index)
+            if ("i" in stack) {
+                string = string.replaceFirst("*", "</i>")
+                stack.remove("i")
+            } else {
+                string = string.replaceFirst("*", "<i>")
+                stack.push("i")
+            }
+        } else if (string.indexOf("**", index) != string.indexOf("***", index) && string.indexOf("**", index) != -1) {
+            index = string.indexOf("**", index)
+            if ("b" in stack) {
+                string = string.replaceFirst("**", "</b>")
+                stack.remove("b")
+            } else {
+                string = string.replaceFirst("**", "<b>")
+                stack.push("b")
+            }
+        } else if ("bi" in stack || ("i" in stack && "b" in stack) && string.indexOf("***", index) != -1) {
+            index = indexOf("***", index)
+            stack.clear()
+            string = string.replaceFirst("***", "</b></i>")
+        } else {
+            index = indexOf("***", index)
+            stack.push("i")
+            stack.push("b")
+            stack.push("bi")
+            string = string.replaceFirst("***", "<b><i>")
         }
+
     }
-    return result.toString()
+    return string
 }
 
 fun main() {
