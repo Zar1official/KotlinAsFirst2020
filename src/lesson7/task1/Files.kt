@@ -3,7 +3,6 @@
 package lesson7.task1
 
 import java.io.File
-import java.util.*
 
 // Урок 7: работа с файлами
 // Урок интегральный, поэтому его задачи имеют сильно увеличенную стоимость
@@ -139,8 +138,15 @@ fun sibilants(inputName: String, outputName: String) {
  *
  */
 fun centerFile(inputName: String, outputName: String) {
-    TODO()
+    val lines = File(inputName).bufferedReader().readLines().map { it.trim() }
+    val maxLength = lines.maxOfOrNull { it.length } ?: 0
+    File(outputName).bufferedWriter().use {
+        lines.forEach { str ->
+            it.appendLine(" ".repeat((maxLength - str.length) / 2) + str)
+        }
+    }
 }
+
 
 /**
  * Сложная (20 баллов)
@@ -170,7 +176,30 @@ fun centerFile(inputName: String, outputName: String) {
  * 8) Если входной файл удовлетворяет требованиям 1-7, то он должен быть в точности идентичен выходному файлу
  */
 fun alignFileByWidth(inputName: String, outputName: String) {
-    TODO()
+    val lines = File(inputName)
+        .bufferedReader()
+        .readLines()
+        .map { it.trim().split(Regex("\\s+")) }
+    val maxLength = lines.maxOfOrNull { it.joinToString(",").length } ?: 0
+    File(outputName).bufferedWriter().use {
+        lines.forEach { line ->
+            when (line.size) {
+                in 0..1 -> it.appendLine(line.getOrElse(0) { "" })
+                else -> {
+                    val result = StringBuilder()
+                    val delta = maxLength - line.sumOf { word -> word.length }
+                    val countSp = line.size - 1
+                    val divSp = delta / countSp
+                    val modSp = delta % countSp
+                    for (i in 0 until countSp)
+                        result.append(line[i]).append(" ".repeat(divSp + if (i < modSp) 1 else 0))
+                    result.append(line.last())
+                    it.appendLine(result.toString())
+                }
+            }
+        }
+
+    }
 }
 
 
@@ -382,7 +411,6 @@ Suspendisse <s>et elit in enim tempus iaculis</s>.
 //}
 
 fun main() {
-//    println(")vf4IKM9)Z6Pm9r;&Zq~~L7MUN-Sl*{~~Bbm;%P.|0:rp:rB8`V`d{92**hY**Mq^c/0W]7-Zs,?}B;~~\\tPgQ1W:Y,jba7~~v/~~Qb~~9F?L~~[Y".replaceTags())
 }
 
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
