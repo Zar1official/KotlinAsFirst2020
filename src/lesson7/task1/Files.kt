@@ -340,53 +340,57 @@ Suspendisse <s>et elit in enim tempus iaculis</s>.
 
 fun String.replaceTags(): String {
     val result = StringBuilder()
-    val stack = Stack<Char>()
+    val stack = Stack<String>()
     var index = 0
     while (index < this.length) {
         when (this[index]) {
             '*' ->
                 if (this.getOrNull(index + 2) == this[index] && this.getOrNull(index + 1) == this[index]) {
-                    if ('b' in stack) {
-                        result.append("</b>")
-                        stack.remove('b')
+                    if ("b" in stack && "i" in stack) {
+                        stack.remove("b")
+                        stack.remove("i")
+                        if ("bi" in stack)
+                            result.append("</i></b>")
+                        else
+                            result.append("</b></i>")
+                        stack.remove("bi")
                     } else {
-                        result.append("<b>")
-                        stack.push('b')
-                    }
-                    if ('i' in stack) {
-                        result.append("</i>")
-                        stack.remove('i')
-                    } else {
-                        result.append("<i>")
-                        stack.push('i')
+                        result.append("<b><i>")
+                        stack.push("b")
+                        stack.push("i")
+                        stack.push("bi")
                     }
                     index += 3
                 } else if (this.getOrNull(index + 1) == this[index]) {
-                    if ('b' in stack) {
+                    if ("b" in stack) {
                         result.append("</b>")
-                        stack.remove('b')
+                        stack.push("bi")
+                        stack.remove("b")
                     } else {
                         result.append("<b>")
-                        stack.push('b')
+                        stack.push("b")
+                        stack.remove("bi")
                     }
                     index += 2
                 } else {
-                    if ('i' in stack) {
+                    if ("i" in stack) {
                         result.append("</i>")
-                        stack.remove('i')
+                        stack.remove("i")
+                        stack.remove("bi")
                     } else {
                         result.append("<i>")
-                        stack.push('i')
+                        stack.push("bi")
+                        stack.push("i")
                     }
                     index++
                 }
-            '~' -> if (this.getOrNull(index + 1) == '~') {
-                if ('~' in stack) {
+            '~' -> if (this.getOrNull(index + 1) == this[index]) {
+                if ("s" in stack) {
                     result.append("</s>")
-                    stack.remove('~')
+                    stack.remove("s")
                 } else {
                     result.append("<s>")
-                    stack.push('~')
+                    stack.push("s")
                 }
                 index += 2
             }
