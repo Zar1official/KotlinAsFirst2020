@@ -417,11 +417,10 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
     val result = StringBuilder().append("<html><body><p>")
     val lines = File(inputName).bufferedReader().readLines()
     lines.forEachIndexed { index, s ->
-        if (s.trim().isEmpty() && lines[index - 1].trim().isNotEmpty() && index != 0 && index != lines.lastIndex) {
+        if (s.trim().isEmpty() && lines[index - 1].trim().isNotEmpty() && index != 0 && index != lines.lastIndex)
             result.append("</p><p>")
-        } else {
+        else
             result.append(s)
-        }
     }
     File(outputName).bufferedWriter().use {
         it.write(result.replaceTags("**").replaceTags("*").replaceTags("~~").append("</p></body></html>").toString())
