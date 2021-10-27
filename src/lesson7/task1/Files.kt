@@ -414,21 +414,34 @@ fun main() {
 }
 
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
-//    val result = StringBuilder().append("<html><body><p>")
-//    val lines = File(inputName).bufferedReader().readLines()
-//    lines.forEachIndexed { index, s ->
-//        if (s.trim().isEmpty() && lines[index - 1].trim().isNotEmpty() && index != 0 && index != lines.lastIndex) {
-//            result.append("</p><p>")
-//        } else {
-//            result.append(s.replaceTags())
-//        }
-//    }
-//    File(outputName).bufferedWriter().use {
-//        it.write(result.append("</p></body></html>").toString())
-//    }
-    TODO()
+    val result = StringBuilder().append("<html><body><p>")
+    val lines = File(inputName).bufferedReader().readLines()
+    lines.forEachIndexed { index, s ->
+        if (s.trim().isEmpty() && lines[index - 1].trim().isNotEmpty() && index != 0 && index != lines.lastIndex) {
+            result.append("</p><p>")
+        } else {
+            result.append(s)
+        }
+    }
+    File(outputName).bufferedWriter().use {
+        it.write(result.replaceTags("**").replaceTags("*").replaceTags("~~").append("</p></body></html>").toString())
+    }
 }
 
+fun StringBuilder.replaceTags(splitter: String): StringBuilder {
+    val replacementMap = mapOf(
+        "**" to listOf("<b>", "</b>"),
+        "*" to listOf("<i>", "</i>"),
+        "~~" to listOf("<s>", "</s>")
+    )
+    val listOfText = this.toString().split(splitter)
+    val result = StringBuilder().append(listOfText[0])
+    for ((counter, i) in (1..listOfText.lastIndex).withIndex()) {
+        result.append(replacementMap[splitter]!![counter % 2])
+        result.append(listOfText[i])
+    }
+    return result
+}
 
 /**
  * Сложная (23 балла)
