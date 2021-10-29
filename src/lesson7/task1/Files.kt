@@ -417,7 +417,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
     val result = StringBuilder().append("<html><body><p>")
     val lines = File(inputName).bufferedReader().readLines()
     lines.forEachIndexed { index, s ->
-        if (s.trim().isEmpty() && lines[index - 1].trim().isNotEmpty() && index != 0 && index != lines.lastIndex)
+        if (index != 0 && index != lines.lastIndex && s.trim().isEmpty() && lines[index - 1].trim().isNotEmpty())
             result.append("</p><p>")
         else
             result.append(s)
@@ -433,6 +433,7 @@ fun StringBuilder.replaceTags(splitter: String): StringBuilder {
         "*" to listOf("<i>", "</i>"),
         "~~" to listOf("<s>", "</s>")
     )
+
     val listOfText = this.toString().split(splitter)
     val result = StringBuilder().append(listOfText[0])
     for ((counter, i) in (1..listOfText.lastIndex).withIndex()) {
@@ -441,6 +442,7 @@ fun StringBuilder.replaceTags(splitter: String): StringBuilder {
     }
     return result
 }
+
 
 /**
  * Сложная (23 балла)
