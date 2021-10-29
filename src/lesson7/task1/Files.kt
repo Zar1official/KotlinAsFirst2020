@@ -372,15 +372,17 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
     val result = StringBuilder().append("<html><body><p>")
     val lines = File(inputName).bufferedReader().readLines()
     var opened = false
+    var started = true
     val stack = Stack<String>()
     lines.forEachIndexed { index, s ->
-        if (index != 0 && index != lines.lastIndex && s.trim().isEmpty()) {
+        if (s.trim().isEmpty()) {
             opened = true
         } else {
-            if (opened) {
+            if (opened && started) {
                 result.append("</p><p>")
             }
             opened = false
+            started = true
             var ind = 0
             var string = s
             while (string.indexOf("*") != -1 || string.indexOf("~~") != -1) {
