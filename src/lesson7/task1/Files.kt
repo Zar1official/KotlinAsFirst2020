@@ -3,6 +3,7 @@
 package lesson7.task1
 
 import java.io.File
+import java.util.*
 
 // Урок 7: работа с файлами
 // Урок интегральный, поэтому его задачи имеют сильно увеличенную стоимость
@@ -363,52 +364,6 @@ Suspendisse <s>et elit in enim tempus iaculis</s>.
  * (Отступы и переносы строк в примере добавлены для наглядности, при решении задачи их реализовывать не обязательно)
  */
 
-//fun String.replaceTags(): String {
-//    val stack = Stack<String>()
-//    var index = 0
-//    var string = this
-//    while (string.indexOf("*") != -1 || string.indexOf("~~") != -1) {
-//        if (string.indexOf("~~") != -1) {
-//            if ("s" in stack) {
-//                string = string.replaceFirst("~~", "</s>")
-//                stack.removeAll(listOf("s"))
-//            } else {
-//                string = string.replaceFirst("~~", "<s>")
-//                stack.push("s")
-//            }
-//        } else if (string.indexOf("*", index) != string.indexOf("**", index) && string.indexOf("*", index) != -1) {
-//            index = string.indexOf("*", index)
-//            if ("i" in stack) {
-//                string = string.replaceFirst("*", "</i>")
-//                stack.removeAll(listOf("i"))
-//            } else {
-//                string = string.replaceFirst("*", "<i>")
-//                stack.push("i")
-//            }
-//        } else if (string.indexOf("**", index) != string.indexOf("***", index) && string.indexOf("**", index) != -1) {
-//            index = string.indexOf("**", index)
-//            if ("b" in stack) {
-//                string = string.replaceFirst("**", "</b>")
-//                stack.removeAll(listOf("b"))
-//            } else {
-//                string = string.replaceFirst("**", "<b>")
-//                stack.push("b")
-//            }
-//        } else if ("bi" in stack || ("i" in stack && "b" in stack)) {
-//            index = indexOf("***", index)
-//            stack.clear()
-//            string = string.replaceFirst("***", "</b></i>")
-//        } else {
-//            stack.clear()
-//            index = indexOf("***", index)
-//            stack.push("i")
-//            stack.push("b")
-//            stack.push("bi")
-//            string = string.replaceFirst("***", "<b><i>")
-//        }
-//    }
-//    return string
-//}
 
 fun main() {
 }
@@ -416,32 +371,71 @@ fun main() {
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
     val result = StringBuilder().append("<html><body><p>")
     val lines = File(inputName).bufferedReader().readLines()
+    var counter = 0
+    val stack = Stack<String>()
     lines.forEachIndexed { index, s ->
         if (index != 0 && index != lines.lastIndex && s.trim().isEmpty() && lines[index - 1].trim().isNotEmpty())
             result.append("</p><p>")
-        else
-            result.append(s)
+        else {
+            var ind = 0
+            var string = s
+            while (string.indexOf("*") != -1 || string.indexOf("~~") != -1) {
+                if (string.indexOf("~~") != -1) {
+                    if ("s" in stack) {
+                        string = string.replaceFirst("~~", "</s>")
+                        stack.remove("s")
+                    } else {
+                        string = string.replaceFirst("~~", "<s>")
+                        stack.push("s")
+                    }
+                } else if (string.indexOf("*", ind) != string.indexOf("**", ind) && string.indexOf(
+                        "*",
+                        ind
+                    ) != -1
+                ) {
+                    ind = string.indexOf("*", ind)
+                    if ("i" in stack) {
+                        string = string.replaceFirst("*", "</i>")
+                        stack.remove("i")
+                    } else {
+                        string = string.replaceFirst("*", "<i>")
+                        stack.push("i")
+                    }
+                } else if (string.indexOf("**", ind) != string.indexOf("***", ind) && string.indexOf(
+                        "**",
+                        ind
+                    ) != -1
+                ) {
+                    ind = string.indexOf("**", ind)
+                    if ("b" in stack) {
+                        string = string.replaceFirst("**", "</b>")
+                        stack.removeAll(listOf("b"))
+                    } else {
+                        string = string.replaceFirst("**", "<b>")
+                        stack.push("b")
+                    }
+                } else if ("bi" in stack || ("i" in stack && "b" in stack)) {
+                    ind = string.indexOf("***", ind)
+                    stack.clear()
+                    string = string.replaceFirst("***", "</b></i>")
+                } else {
+                    stack.clear()
+                    ind = string.indexOf("***", ind)
+                    stack.push("i")
+                    stack.push("b")
+                    stack.push("bi")
+                    string = string.replaceFirst("***", "<b><i>")
+                }
+            }
+            result.append(string)
+        }
+
     }
     File(outputName).bufferedWriter().use {
-        it.write(result.replaceTags("**").replaceTags("*").replaceTags("~~").append("</p></body></html>").toString())
+        it.write(result.append("</p></body></html>").toString())
     }
 }
 
-fun StringBuilder.replaceTags(splitter: String): StringBuilder {
-    val replacementMap = mapOf(
-        "**" to listOf("<b>", "</b>"),
-        "*" to listOf("<i>", "</i>"),
-        "~~" to listOf("<s>", "</s>")
-    )
-
-    val listOfText = this.toString().split(splitter)
-    val result = StringBuilder().append(listOfText[0])
-    for ((counter, i) in (1..listOfText.lastIndex).withIndex()) {
-        result.append(replacementMap[splitter]!![counter % 2])
-        result.append(listOfText[i])
-    }
-    return result
-}
 
 
 /**
