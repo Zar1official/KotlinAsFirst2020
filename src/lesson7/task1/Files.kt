@@ -374,7 +374,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
     var opened = false
     var started = false
     val stack = Stack<String>()
-    lines.forEachIndexed { index, s ->
+    lines.forEach { s ->
         if (s.trim().isEmpty()) {
             opened = true
         } else {
@@ -386,56 +386,49 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
             var ind = 0
             var string = s
             while (string.indexOf("*") != -1 || string.indexOf("~~") != -1) {
-                if (string.indexOf("~~") != -1) {
+                val firstIndexOfStrikeThrough = string.indexOf("~~")
+                val firstIndexOfItalic = string.indexOf("*", ind)
+                val firstIndexOfBold = string.indexOf("**", ind)
+                val firstIndexOfBoldPlusItalic = string.indexOf("***", ind)
+                if (firstIndexOfStrikeThrough != -1) {
                     if ("s" in stack) {
                         string = string.replaceFirst("~~", "</s>")
                         stack.remove("s")
                     } else {
                         string = string.replaceFirst("~~", "<s>")
-                        stack.push("s")
+                        stack.add("s")
                     }
-                } else if (string.indexOf("*", ind) != string.indexOf("**", ind) && string.indexOf(
-                        "*",
-                        ind
-                    ) != -1
-                ) {
-                    ind = string.indexOf("*", ind)
+                } else if (firstIndexOfItalic != firstIndexOfBold && firstIndexOfItalic != -1) {
+                    ind = firstIndexOfItalic
                     if ("i" in stack) {
                         string = string.replaceFirst("*", "</i>")
                         stack.remove("i")
                     } else {
                         string = string.replaceFirst("*", "<i>")
-                        stack.push("i")
+                        stack.add("i")
                     }
-                } else if (string.indexOf("**", ind) != string.indexOf("***", ind) && string.indexOf(
-                        "**",
-                        ind
-                    ) != -1
-                ) {
-                    ind = string.indexOf("**", ind)
+                } else if (firstIndexOfBold != firstIndexOfBoldPlusItalic && firstIndexOfBold != -1) {
+                    ind = firstIndexOfBold
                     if ("b" in stack) {
                         string = string.replaceFirst("**", "</b>")
-                        stack.removeAll(listOf("b"))
+                        stack.remove("b")
                     } else {
                         string = string.replaceFirst("**", "<b>")
-                        stack.push("b")
+                        stack.add("b")
                     }
                 } else if ("bi" in stack || ("i" in stack && "b" in stack)) {
-                    ind = string.indexOf("***", ind)
+                    ind = firstIndexOfBoldPlusItalic
                     stack.clear()
                     string = string.replaceFirst("***", "</b></i>")
                 } else {
                     stack.clear()
-                    ind = string.indexOf("***", ind)
-                    stack.push("i")
-                    stack.push("b")
-                    stack.push("bi")
+                    ind = firstIndexOfBoldPlusItalic
+                    stack.addAll(listOf("i", "b", "bi"))
                     string = string.replaceFirst("***", "<b><i>")
                 }
             }
             result.append(string)
         }
-
     }
     File(outputName).bufferedWriter().use {
         it.write(result.append("</p></body></html>").toString())
