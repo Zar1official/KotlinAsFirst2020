@@ -27,7 +27,7 @@ data class Square(val column: Int, val row: Int) {
      * Для клетки не в пределах доски вернуть пустую строку
      */
     fun notation(): String =
-        if (this.inside()) "${'a' + column - 1}${row}" else ""
+        if (inside()) "${'a' + column - 1}${row}" else ""
 }
 
 /**
