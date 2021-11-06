@@ -289,7 +289,7 @@ fun getKnightMoves(square: Square): Set<Square> {
     ).filter { it.inside() }.toSet()
 }
 
-// воспользуемся поиском в ширину. (Алгоритм подсмотрел из интернета)
+// воспользуемся поиском в ширину. (суть поиска в ширину подсмотрел из интернета)
 fun bfs(start: Square, end: Square, graph: Map<Square, Set<Square>>): List<Square> {
     val distances = mutableMapOf<Square, Int>() // здесь будут храниться длины путей от каждой клетки до стартовой
     val prev = mutableMapOf<Square, Square>() // для каждой клетки будем хранить предыдущую клетку на кратчайшем пути
