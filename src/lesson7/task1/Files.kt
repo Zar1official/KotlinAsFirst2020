@@ -418,10 +418,9 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                     }
                 } else if ("bi" in stack || ("i" in stack && "b" in stack)) {
                     ind = firstIndexOfBoldPlusItalic
-                    stack.clear()
+                    stack.removeAll(listOf("i", "bi", "b"))
                     string = string.replaceFirst("***", "</b></i>")
                 } else {
-                    stack.clear()
                     ind = firstIndexOfBoldPlusItalic
                     stack.addAll(listOf("i", "b", "bi"))
                     string = string.replaceFirst("***", "<b><i>")
