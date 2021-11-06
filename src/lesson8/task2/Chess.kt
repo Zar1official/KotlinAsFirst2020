@@ -294,7 +294,7 @@ fun bfs(start: Square, end: Square, graph: Map<Square, Set<Square>>): List<Squar
     val distances = mutableMapOf<Square, Int>() // здесь будут храниться длины путей от каждой клетки до стартовой
     val prev = mutableMapOf<Square, Square>() // для каждой клетки будем хранить предыдущую клетку на кратчайшем пути
     for (i in graph.keys) {
-        distances[i] = 64 // так как ищем кратчайший путь, забиваем по умолчанию макс значением
+        distances[i] = 8 // так как ищем кратчайший путь, забиваем по умолчанию макс значением
         prev[i] = Square(0, 0) // забиваем клеткой, которая не может существовать на доске
     }
     distances[start] = 0 // расстояние от start до самой себя 0
@@ -311,6 +311,7 @@ fun bfs(start: Square, end: Square, graph: Map<Square, Set<Square>>): List<Squar
             }
         }
     }
+    println(distances)
     // теперь осталось восстановить путь
     var finish = end
     val resultPath = mutableListOf<Square>()
