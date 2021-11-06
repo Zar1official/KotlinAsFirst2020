@@ -39,7 +39,7 @@ data class Square(val column: Int, val row: Int) {
  */
 fun square(notation: String): Square {
     if (notation.length != 2)
-        throw IllegalArgumentException()
+        throw IllegalArgumentException("notation is incorrect")
     val square = Square(notation[0] - 'a' + 1, notation[1].digitToInt())
     if (!square.inside())
         throw IllegalArgumentException("notation is incorrect")
@@ -187,7 +187,7 @@ fun bishopTrajectory(start: Square, end: Square): List<Square> =
  * Король может последовательно пройти через клетки (4, 2) и (5, 2) к клетке (6, 3).
  */
 fun kingMoveNumber(start: Square, end: Square): Int =
-    if (!start.inside() || !end.inside()) throw IllegalArgumentException() else max(
+    if (!start.inside() || !end.inside()) throw IllegalArgumentException("square is incorrect") else max(
         abs(start.row - end.row),
         abs(start.column - end.column)
     )
@@ -231,7 +231,10 @@ fun kingTrajectory(start: Square, end: Square): List<Square> = TODO()
  * Пример: knightMoveNumber(Square(3, 1), Square(6, 3)) = 3.
  * Конь может последовательно пройти через клетки (5, 2) и (4, 4) к клетке (6, 3).
  */
-fun knightMoveNumber(start: Square, end: Square): Int = knightTrajectory(start, end).size - 1
+fun knightMoveNumber(start: Square, end: Square): Int = when {
+    start.inside() && end.inside() -> knightTrajectory(start, end).size - 1
+    else -> throw IllegalArgumentException("square is incorrect")
+}
 
 /**
  * Очень сложная (10 баллов)
@@ -291,7 +294,7 @@ fun bfs(start: Square, end: Square, graph: Map<Square, Set<Square>>): List<Squar
     val distances = mutableMapOf<Square, Int>() // здесь будут храниться длины путей от каждой клетки до стартовой
     val prev = mutableMapOf<Square, Square>() // для каждой клетки будем хранить предыдущую клетку на кратчайшем пути
     for (i in graph.keys) {
-        distances[i] = 64 // так как ищем кратчайший путь, забиваем по умолчанию
+        distances[i] = 64 // так как ищем кратчайший путь, забиваем по умолчанию макс значением
         prev[i] = Square(0, 0) // забиваем клеткой, которая не может существовать на доске
     }
     distances[start] = 0 // расстояние от start до самой себя 0
