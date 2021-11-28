@@ -2,6 +2,8 @@
 
 package lesson9.task1
 
+import java.lang.IndexOutOfBoundsException
+
 // Урок 9: проектирование классов
 // Максимальное количество баллов = 40 (без очень трудных задач = 15)
 
@@ -35,6 +37,10 @@ interface Matrix<E> {
     operator fun set(row: Int, column: Int, value: E)
 
     operator fun set(cell: Cell, value: E)
+
+    fun contains(other: Matrix<E>): Boolean
+
+    fun getOrNull(cell: Cell): E?
 }
 
 /**
@@ -44,32 +50,52 @@ interface Matrix<E> {
  * height = высота, width = ширина, e = чем заполнить элементы.
  * Бросить исключение IllegalArgumentException, если height или width <= 0.
  */
-fun <E> createMatrix(height: Int, width: Int, e: E): Matrix<E> = TODO()
+fun <E> createMatrix(height: Int, width: Int, e: E): Matrix<E> {
+    require(!(height <= 0 || width <= 0))
+    return MatrixImpl(height, width, e)
+}
 
 /**
  * Средняя сложность (считается двумя задачами в 3 балла каждая)
  *
  * Реализация интерфейса "матрица"
  */
-class MatrixImpl<E> : Matrix<E> {
-    override val height: Int = TODO()
+class MatrixImpl<E>(override val height: Int, override val width: Int, val e: E) : Matrix<E> {
+    private val dataList = MutableList(width * height) { e }
 
-    override val width: Int = TODO()
+    override fun get(row: Int, column: Int): E = dataList[row * width + column]
 
-    override fun get(row: Int, column: Int): E = TODO()
-
-    override fun get(cell: Cell): E = TODO()
+    override fun get(cell: Cell): E = get(cell.row, cell.column)
 
     override fun set(row: Int, column: Int, value: E) {
-        TODO()
+        dataList[width * row + column] = value
     }
 
     override fun set(cell: Cell, value: E) {
-        TODO()
+        set(cell.row, cell.column, value)
     }
 
-    override fun equals(other: Any?) = TODO()
+    override fun equals(other: Any?) = other is MatrixImpl<*> && other.dataList == dataList
 
-    override fun toString(): String = TODO()
+    override fun toString(): String {
+        val result = StringBuilder()
+        for (height in 0 until this.height) {
+            for (width in 0 until this.width) {
+                result.append("%3d".format(this[height, width]))
+            }
+            result.append("\n")
+        }
+        return result.toString()
+    }
+
+    override fun contains(other: Matrix<E>) = this.width >= other.width && this.height >= other.height
+
+    override fun getOrNull(cell: Cell): E? {
+        return try {
+            get(cell)
+        } catch (e: IndexOutOfBoundsException) {
+            null
+        }
+    }
 }
 

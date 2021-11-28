@@ -366,6 +366,7 @@ Suspendisse <s>et elit in enim tempus iaculis</s>.
 
 
 fun main() {
+    markdownToHtmlSimple("input/input_text.txt", "input/input_text.txt")
 }
 
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
@@ -383,50 +384,47 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
             }
             opened = false
             started = true
-            var ind = 0
-            var string = s
-            while (string.indexOf("*") != -1 || string.indexOf("~~") != -1) {
-                val firstIndexOfStrikeThrough = string.indexOf("~~")
-                val firstIndexOfItalic = string.indexOf("*", ind)
-                val firstIndexOfBold = string.indexOf("**", ind)
-                val firstIndexOfBoldPlusItalic = string.indexOf("***", ind)
-                if (firstIndexOfStrikeThrough != -1) {
-                    if ("s" in stack) {
-                        string = string.replaceFirst("~~", "</s>")
-                        stack.remove("s")
-                    } else {
-                        string = string.replaceFirst("~~", "<s>")
-                        stack.add("s")
+            var i = 0
+            while (i < s.length) {
+                when (s[i]) {
+                    '*' -> {
+                        if (s[i + 1] == '*') {
+                            if (stack.isNotEmpty() && stack.peek() == "b") {
+                                result.append("</b>")
+                                stack.pop()
+                            } else {
+                                result.append("<b>")
+                                stack.push("b")
+                            }
+                            i++
+                        } else {
+                            if (stack.isNotEmpty() && stack.peek() == "i") {
+                                result.append("</i>")
+                                stack.pop()
+                            } else {
+                                result.append("<i>")
+                                stack.push("i")
+                            }
+                        }
                     }
-                } else if (firstIndexOfItalic != firstIndexOfBold && firstIndexOfItalic != -1) {
-                    ind = firstIndexOfItalic
-                    if ("i" in stack) {
-                        string = string.replaceFirst("*", "</i>")
-                        stack.remove("i")
-                    } else {
-                        string = string.replaceFirst("*", "<i>")
-                        stack.add("i")
+                    '~' -> {
+                        if (s[i + 1] == '~') {
+                            if (stack.isNotEmpty() && stack.peek() == "s") {
+                                result.append("</s>")
+                                stack.pop()
+                            } else {
+                                result.append("<s>")
+                                stack.push("s")
+                            }
+                            i++
+                        } else {
+                            result.append(s[i])
+                        }
                     }
-                } else if (firstIndexOfBold != firstIndexOfBoldPlusItalic && firstIndexOfBold != -1) {
-                    ind = firstIndexOfBold
-                    if ("b" in stack) {
-                        string = string.replaceFirst("**", "</b>")
-                        stack.remove("b")
-                    } else {
-                        string = string.replaceFirst("**", "<b>")
-                        stack.add("b")
-                    }
-                } else if ("bi" in stack || ("i" in stack && "b" in stack)) {
-                    ind = firstIndexOfBoldPlusItalic
-                    stack.removeAll(listOf("i", "bi", "b"))
-                    string = string.replaceFirst("***", "</b></i>")
-                } else {
-                    ind = firstIndexOfBoldPlusItalic
-                    stack.addAll(listOf("i", "b", "bi"))
-                    string = string.replaceFirst("***", "<b><i>")
+                    else -> result.append(s[i])
                 }
+                i++
             }
-            result.append(string)
         }
     }
     File(outputName).bufferedWriter().use {
@@ -603,4 +601,3 @@ fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
 fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
     TODO()
 }
-

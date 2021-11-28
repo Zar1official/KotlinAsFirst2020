@@ -2,8 +2,11 @@
 
 package lesson9.task2
 
+import lesson9.task1.Cell
 import lesson9.task1.Matrix
 import lesson9.task1.createMatrix
+import java.lang.IllegalArgumentException
+import java.lang.IllegalStateException
 
 // Все задачи в этом файле требуют наличия реализации интерфейса "Матрица" в Matrix.kt
 
@@ -216,7 +219,26 @@ operator fun Matrix<Int>.times(other: Matrix<Int>): Matrix<Int> = TODO(this.toSt
  * Вернуть тройку (Triple) -- (да/нет, требуемый сдвиг по высоте, требуемый сдвиг по ширине).
  * Если наложение невозможно, то первый элемент тройки "нет" и сдвиги могут быть любыми.
  */
-fun canOpenLock(key: Matrix<Int>, lock: Matrix<Int>): Triple<Boolean, Int, Int> = TODO()
+fun canOpenLock(key: Matrix<Int>, lock: Matrix<Int>): Triple<Boolean, Int, Int> {
+    val default = Triple(false, -1, -1)
+    if (!lock.contains(key))
+        return default
+    for (row in 0..lock.height - key.height)
+        for (line in 0..lock.width - key.width) {
+            var flag = true
+            for (i in 0 until key.height) {
+                if (!flag) break
+                for (j in 0 until key.width)
+                    if (key[i, j] == lock[row + i, line + j]) {
+                        flag = false
+                        break
+                    }
+            }
+            if (flag) return Triple(true, row, line)
+        }
+    return default
+}
+
 
 /**
  * Сложная (8 баллов)
@@ -245,7 +267,45 @@ fun canOpenLock(key: Matrix<Int>, lock: Matrix<Int>): Triple<Boolean, Int, Int> 
  * 0  4 13  6
  * 3 10 11  8
  */
-fun fifteenGameMoves(matrix: Matrix<Int>, moves: List<Int>): Matrix<Int> = TODO()
+fun fifteenGameMoves(matrix: Matrix<Int>, moves: List<Int>): Matrix<Int> {
+    fun findStart(): Cell {
+        for (row in 0 until matrix.height) {
+            for (line in 0 until matrix.width) {
+                if (matrix[row, line] == 0) {
+                    return Cell(row, line)
+                }
+            }
+        }
+        throw IllegalStateException("no empty cells")
+    }
+
+    fun getNeighbor(current: Cell, n: Int): Cell {
+        val c = current.column
+        val r = current.row
+        listOf(
+            Cell(r, c + 1),
+            Cell(r, c - 1),
+            Cell(r + 1, c),
+            Cell(r - 1, c)
+        ).forEach { cell ->
+            if (matrix.getOrNull(cell) == n) {
+                return cell
+            }
+        }
+        throw IllegalStateException()
+    }
+
+    check(moves.all { it in 1..15 })
+    var chip = findStart()
+    moves.forEach { move ->
+        val neighbor = getNeighbor(chip, move)
+        val buffer = matrix[neighbor]
+        matrix[neighbor] = matrix[chip]
+        matrix[chip] = buffer
+        chip = neighbor
+    }
+    return matrix
+}
 
 /**
  * Очень сложная (32 балла)
