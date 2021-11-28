@@ -388,7 +388,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
             while (i < s.length) {
                 when (s[i]) {
                     '*' -> {
-                        if (s[i + 1] == '*') {
+                        if (s.getOrNull(i + 1) == '*') {
                             if (stack.isNotEmpty() && stack.peek() == "b") {
                                 result.append("</b>")
                                 stack.pop()
@@ -408,7 +408,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                         }
                     }
                     '~' -> {
-                        if (s[i + 1] == '~') {
+                        if (s.getOrNull(i + 1) == '~') {
                             if (stack.isNotEmpty() && stack.peek() == "s") {
                                 result.append("</s>")
                                 stack.pop()
