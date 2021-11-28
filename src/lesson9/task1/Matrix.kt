@@ -38,6 +38,7 @@ interface Matrix<E> {
 
     operator fun set(cell: Cell, value: E)
 
+    // не собирается проект когда пытаюсь добавить их в интерфейс поэтому вынес в экстеншны
 //    fun contains(other: Matrix<E>): Boolean
 //
 //    fun getOrNull(cell: Cell): E?
@@ -50,7 +51,10 @@ interface Matrix<E> {
  * height = высота, width = ширина, e = чем заполнить элементы.
  * Бросить исключение IllegalArgumentException, если height или width <= 0.
  */
-fun <E> createMatrix(height: Int, width: Int, e: E): Matrix<E> = TODO()
+fun <E> createMatrix(height: Int, width: Int, e: E): Matrix<E> {
+    require(height > 0 && width > 0)
+    return MatrixImpl(height, width, e)
+}
 
 /**
  * Средняя сложность (считается двумя задачами в 3 балла каждая)
@@ -86,14 +90,6 @@ class MatrixImpl<E>(override val height: Int, override val width: Int, e: E) : M
     }
 
 //    override fun contains(other: Matrix<E>) = this.width >= other.width && this.height >= other.height
-//
-//    override fun getOrNull(cell: Cell): E? {
-//        return try {
-//            get(cell)
-//        } catch (e: IndexOutOfBoundsException) {
-//            null
-//        }
-//    }
 
     override fun hashCode(): Int {
         var result = height
