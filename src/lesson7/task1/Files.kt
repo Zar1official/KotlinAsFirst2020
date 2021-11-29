@@ -375,6 +375,17 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
     var opened = false
     var started = false
     val stack = Stack<String>()
+
+    fun StringBuilder.replace(replacement: String) {
+        if (stack.isNotEmpty() && stack.peek() == replacement) {
+            result.append("</$replacement>")
+            stack.pop()
+        } else {
+            result.append("<$replacement>")
+            stack.push(replacement)
+        }
+    }
+
     lines.forEach { s ->
         if (s.trim().isEmpty()) {
             opened = true
@@ -389,33 +400,15 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                 when (s[i]) {
                     '*' -> {
                         if (s.getOrNull(i + 1) == '*') {
-                            if (stack.isNotEmpty() && stack.peek() == "b") {
-                                result.append("</b>")
-                                stack.pop()
-                            } else {
-                                result.append("<b>")
-                                stack.push("b")
-                            }
+                            result.replace("b")
                             i++
                         } else {
-                            if (stack.isNotEmpty() && stack.peek() == "i") {
-                                result.append("</i>")
-                                stack.pop()
-                            } else {
-                                result.append("<i>")
-                                stack.push("i")
-                            }
+                            result.replace("i")
                         }
                     }
                     '~' -> {
                         if (s.getOrNull(i + 1) == '~') {
-                            if (stack.isNotEmpty() && stack.peek() == "s") {
-                                result.append("</s>")
-                                stack.pop()
-                            } else {
-                                result.append("<s>")
-                                stack.push("s")
-                            }
+                            result.replace("s")
                             i++
                         } else {
                             result.append(s[i])
