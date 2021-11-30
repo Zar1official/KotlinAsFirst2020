@@ -221,7 +221,7 @@ operator fun Matrix<Int>.times(other: Matrix<Int>): Matrix<Int> = TODO(this.toSt
  * Если наложение невозможно, то первый элемент тройки "нет" и сдвиги могут быть любыми.
  */
 
-fun Matrix<Int>.containCell(cell: Cell): Boolean = cell.row < this.height && cell.column < this.width
+fun Matrix<Int>.containCell(cell: Cell): Boolean = cell.row in 0 until this.height && cell.column in 0 until this.width
 
 fun Matrix<Int>.getOrNull(cell: Cell): Int? = if (this.containCell(cell)) get(cell) else null
 
@@ -280,6 +280,7 @@ fun fifteenGameMoves(matrix: Matrix<Int>, moves: List<Int>): Matrix<Int> {
         for (row in 0 until matrix.height) {
             for (line in 0 until matrix.width) {
                 if (matrix[row, line] == 0) {
+                    println(Cell(row, line))
                     return Cell(row, line)
                 }
             }
@@ -308,6 +309,11 @@ fun fifteenGameMoves(matrix: Matrix<Int>, moves: List<Int>): Matrix<Int> {
         chip = neighbor
     }
     return matrix
+}
+
+fun main() {
+    println(Cell(1, 10))
+
 }
 
 /**
