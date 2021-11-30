@@ -302,7 +302,7 @@ fun bfs(start: Square, end: Square, graph: Map<Square, Set<Square>>): List<Squar
     queue.add(start)
     while (queue.isNotEmpty()) {
         val s = queue.first()
-        queue.remove(s)
+        queue.removeFirst()
         for (i in graph[s]!!) {
             if (distances[i]!! > (distances[s]!! + 1)) {
                 prev[i] = s

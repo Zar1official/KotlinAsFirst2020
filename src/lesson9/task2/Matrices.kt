@@ -221,12 +221,9 @@ operator fun Matrix<Int>.times(other: Matrix<Int>): Matrix<Int> = TODO(this.toSt
  * Если наложение невозможно, то первый элемент тройки "нет" и сдвиги могут быть любыми.
  */
 
-fun Matrix<Int>.getOrNull(cell: Cell): Int? =
-    try {
-        get(cell)
-    } catch (e: IndexOutOfBoundsException) {
-        null
-    }
+fun Matrix<Int>.containCell(cell: Cell): Boolean = cell.row < this.height && cell.column < this.width
+
+fun Matrix<Int>.getOrNull(cell: Cell): Int? = if (this.containCell(cell)) get(cell) else null
 
 fun Matrix<Int>.contain(other: Matrix<Int>): Boolean = this.width >= other.width && this.height >= other.height
 
@@ -293,17 +290,12 @@ fun fifteenGameMoves(matrix: Matrix<Int>, moves: List<Int>): Matrix<Int> {
     fun getNeighbor(current: Cell, n: Int): Cell {
         val c = current.column
         val r = current.row
-        listOf(
+        return listOf(
             Cell(r, c + 1),
             Cell(r, c - 1),
             Cell(r + 1, c),
             Cell(r - 1, c)
-        ).forEach { cell ->
-            if (matrix.getOrNull(cell) == n) {
-                return cell
-            }
-        }
-        throw IllegalStateException()
+        ).firstOrNull { matrix.getOrNull(it) == n } ?: throw IllegalStateException("incorrect move")
     }
 
     check(moves.all { it in 1..15 })

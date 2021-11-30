@@ -37,11 +37,6 @@ interface Matrix<E> {
     operator fun set(row: Int, column: Int, value: E)
 
     operator fun set(cell: Cell, value: E)
-
-    // не собирается проект когда пытаюсь добавить их в интерфейс поэтому вынес в экстеншны
-//    fun contains(other: Matrix<E>): Boolean
-//
-//    fun getOrNull(cell: Cell): E?
 }
 
 /**
@@ -76,7 +71,8 @@ class MatrixImpl<E>(override val height: Int, override val width: Int, e: E) : M
         set(cell.row, cell.column, value)
     }
 
-    override fun equals(other: Any?) = other is MatrixImpl<*> && other.dataList == dataList
+    override fun equals(other: Any?) =
+        other is MatrixImpl<*> && other.dataList == dataList && height == other.height && width == other.width
 
     override fun toString(): String {
         val result = StringBuilder()
@@ -89,11 +85,10 @@ class MatrixImpl<E>(override val height: Int, override val width: Int, e: E) : M
         return result.toString()
     }
 
-//    override fun contains(other: Matrix<E>) = this.width >= other.width && this.height >= other.height
-
     override fun hashCode(): Int {
         var result = height
         result = 31 * result + width
+        result = 31 * result + dataList.hashCode()
         return result
     }
 }
