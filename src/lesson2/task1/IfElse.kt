@@ -3,6 +3,7 @@
 package lesson2.task1
 
 import lesson1.task1.discriminant
+import lesson1.task1.sqr
 import kotlin.math.max
 import kotlin.math.sqrt
 
@@ -68,7 +69,15 @@ fun minBiRoot(a: Double, b: Double, c: Double): Double {
  * Мой возраст. Для заданного 0 < n < 200, рассматриваемого как возраст человека,
  * вернуть строку вида: «21 год», «32 года», «12 лет».
  */
-fun ageDescription(age: Int): String = TODO()
+fun ageDescription(age: Int): String {
+    val last = age % 10
+    if (age % 100 in 11..19 || last in 5..9)
+        return "$age лет"
+    return if (last == 1)
+        "$age год"
+    else
+        "$age года"
+}
 
 /**
  * Простая (2 балла)
@@ -122,7 +131,18 @@ fun rookOrBishopThreatens(
  * прямоугольным (вернуть 1) или тупоугольным (вернуть 2).
  * Если такой треугольник не существует, вернуть -1.
  */
-fun triangleKind(a: Double, b: Double, c: Double): Int = TODO()
+fun triangleKind(a: Double, b: Double, c: Double): Int {
+    if (a + b < c || a + c < b || b + c < a)
+        return -1
+    val sides = listOf(a, b, c).sorted()
+    if (sqr(sides[2]) == sqr(sides[1]) + sqr(sides[0]))
+        return 1
+    else if (sqr(sides[2]) < sqr(sides[1]) + sqr(sides[0]))
+        return 0
+    else
+        return 2
+}
+
 
 /**
  * Средняя (3 балла)
@@ -132,12 +152,13 @@ fun triangleKind(a: Double, b: Double, c: Double): Int = TODO()
  * Найти длину пересечения отрезков AB и CD.
  * Если пересечения нет, вернуть -1.
  */
-fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int {
-    if (a <= d && b >= c || c <= b && d >= a) {
-        if (a >= c && b <= d) return b - a
-        if (a >= c && b >= d) return d - a
-        if (a <= c && b <= d) return b - c
-        if (a <= c && b >= d) return d - c
-    }
-    return -1
+fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int = when {
+    ((a == b && a in c..d) || (c == d && c in a..b) || (a == c && c == d)) -> 0
+    c > b || d < a -> -1
+    c in a..b && d in a..b -> d - c
+    a in c..d && b in c..d -> b - a
+    c > a -> b - c
+    c < a -> d - a
+    else -> -1
 }
+

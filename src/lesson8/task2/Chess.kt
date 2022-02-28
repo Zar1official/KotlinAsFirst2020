@@ -2,6 +2,10 @@
 
 package lesson8.task2
 
+import kotlin.collections.ArrayDeque
+import kotlin.math.abs
+import kotlin.math.max
+
 /**
  * Клетка шахматной доски. Шахматная доска квадратная и имеет 8 х 8 клеток.
  * Поэтому, обе координаты клетки (горизонталь row, вертикаль column) могут находиться в пределах от 1 до 8.
@@ -22,11 +26,8 @@ data class Square(val column: Int, val row: Int) {
      * В нотации, колонки обозначаются латинскими буквами от a до h, а ряды -- цифрами от 1 до 8.
      * Для клетки не в пределах доски вернуть пустую строку
      */
-    fun notation(): String {
-        if (column !in 1..8 || row !in 1..8) return ""
-        val columns = listOf('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h')
-        return "${columns[column - 1]}$row"
-    }
+    fun notation(): String =
+        if (inside()) "${'a' + column - 1}${row}" else ""
 }
 
 /**
@@ -37,9 +38,12 @@ data class Square(val column: Int, val row: Int) {
  * Если нотация некорректна, бросить IllegalArgumentException
  */
 fun square(notation: String): Square {
-    if (!notation.matches(Regex("[a-h][1-8]"))) throw IllegalArgumentException()
-    val columns = mapOf('a' to 1, 'b' to 2, 'c' to 3, 'd' to 4, 'e' to 5, 'f' to 6, 'g' to 7, 'h' to 8)
-    return Square(columns[notation[0]]!!, notation[1].digitToInt())
+    if (notation.length != 2)
+        throw IllegalArgumentException("notation is incorrect")
+    val square = Square(notation[0] - 'a' + 1, notation[1].digitToInt())
+    if (!square.inside())
+        throw IllegalArgumentException("notation is incorrect")
+    return square
 }
 
 /**
@@ -65,7 +69,13 @@ fun square(notation: String): Square {
  * Пример: rookMoveNumber(Square(3, 1), Square(6, 3)) = 2
  * Ладья может пройти через клетку (3, 3) или через клетку (6, 1) к клетке (6, 3).
  */
-fun rookMoveNumber(start: Square, end: Square): Int = TODO()
+fun rookMoveNumber(start: Square, end: Square): Int =
+    when {
+        !start.inside() || !end.inside() -> throw IllegalArgumentException("square is incorrect")
+        start == end -> 0
+        start.column == end.column || start.row == end.row -> 1
+        else -> 2
+    }
 
 /**
  * Средняя (3 балла)
@@ -81,7 +91,11 @@ fun rookMoveNumber(start: Square, end: Square): Int = TODO()
  *          rookTrajectory(Square(3, 5), Square(8, 5)) = listOf(Square(3, 5), Square(8, 5))
  * Если возможно несколько вариантов самой быстрой траектории, вернуть любой из них.
  */
-fun rookTrajectory(start: Square, end: Square): List<Square> = TODO()
+fun rookTrajectory(start: Square, end: Square): List<Square> = when (rookMoveNumber(start, end)) {
+    0 -> listOf(start)
+    1 -> listOf(start, end)
+    else -> listOf(start, Square(start.column, end.row), end)
+}
 
 /**
  * Простая (2 балла)
@@ -106,7 +120,13 @@ fun rookTrajectory(start: Square, end: Square): List<Square> = TODO()
  * Примеры: bishopMoveNumber(Square(3, 1), Square(6, 3)) = -1; bishopMoveNumber(Square(3, 1), Square(3, 7)) = 2.
  * Слон может пройти через клетку (6, 4) к клетке (3, 7).
  */
-fun bishopMoveNumber(start: Square, end: Square): Int = TODO()
+fun bishopMoveNumber(start: Square, end: Square): Int = when {
+    !start.inside() || !end.inside() -> throw IllegalArgumentException("incorrect square")
+    (start.row + start.column) % 2 != (end.row + end.column) % 2 -> -1
+    start == end -> 0
+    abs(start.row - end.row) == abs(start.column - end.column) -> 1
+    else -> 2
+}
 
 /**
  * Сложная (5 баллов)
@@ -126,7 +146,25 @@ fun bishopMoveNumber(start: Square, end: Square): Int = TODO()
  *          bishopTrajectory(Square(1, 3), Square(6, 8)) = listOf(Square(1, 3), Square(6, 8))
  * Если возможно несколько вариантов самой быстрой траектории, вернуть любой из них.
  */
-fun bishopTrajectory(start: Square, end: Square): List<Square> = TODO()
+fun bishopTrajectory(start: Square, end: Square): List<Square> =
+    when (bishopMoveNumber(start, end)) {
+        -1 -> listOf()
+        0 -> listOf(start)
+        1 -> listOf(start, end)
+        else -> {
+            var res = listOf<Square>()
+            for (r in 1..8) {
+                for (c in 1..8) {
+                    val square = Square(c, r)
+                    val fromStartDistance = bishopMoveNumber(start, square)
+                    val fromEndDistance = bishopMoveNumber(end, square)
+                    if (fromEndDistance == fromStartDistance && fromEndDistance == 1)
+                        res = listOf(start, square, end)
+                }
+            }
+            res
+        }
+    }
 
 /**
  * Средняя (3 балла)
@@ -148,7 +186,11 @@ fun bishopTrajectory(start: Square, end: Square): List<Square> = TODO()
  * Пример: kingMoveNumber(Square(3, 1), Square(6, 3)) = 3.
  * Король может последовательно пройти через клетки (4, 2) и (5, 2) к клетке (6, 3).
  */
-fun kingMoveNumber(start: Square, end: Square): Int = TODO()
+fun kingMoveNumber(start: Square, end: Square): Int =
+    if (!start.inside() || !end.inside()) throw IllegalArgumentException("square is incorrect") else max(
+        abs(start.row - end.row),
+        abs(start.column - end.column)
+    )
 
 /**
  * Сложная (5 баллов)
@@ -189,41 +231,9 @@ fun kingTrajectory(start: Square, end: Square): List<Square> = TODO()
  * Пример: knightMoveNumber(Square(3, 1), Square(6, 3)) = 3.
  * Конь может последовательно пройти через клетки (5, 2) и (4, 4) к клетке (6, 3).
  */
-fun knightMoveNumber(start: Square, end: Square): Int {
-    if (!start.inside() || !end.inside()) throw IllegalArgumentException()
-    val queue = ArrayDeque<Square>()
-    queue.add(start)
-    val visited = mutableMapOf(start to 0)
-    while (queue.isNotEmpty()) {
-        val next = queue.removeFirst()
-        val distance = visited[next]
-        if (next == end) return distance!!
-        val nextSquares = mutableListOf<Square>()
-        val column = next.column
-        val row = next.row
-        if (column <= 7) {
-            if (row <= 6) nextSquares.add(Square(column + 1, row + 2))
-            if (row >= 3) nextSquares.add(Square(column + 1, row - 2))
-        }
-        if (column <= 6) {
-            if (row <= 7) nextSquares.add(Square(column + 2, row + 1))
-            if (row >= 2) nextSquares.add(Square(column + 2, row - 1))
-        }
-        if (column >= 2) {
-            if (row <= 6) nextSquares.add(Square(column - 1, row + 2))
-            if (row >= 3) nextSquares.add(Square(column - 1, row - 2))
-        }
-        if (column >= 3) {
-            if (row <= 7) nextSquares.add(Square(column - 2, row + 1))
-            if (row >= 2) nextSquares.add(Square(column - 2, row - 1))
-        }
-        for (square in nextSquares) {
-            if (square in visited) continue
-            visited[square] = distance!! + 1
-            queue.add(square)
-        }
-    }
-    return 0
+fun knightMoveNumber(start: Square, end: Square): Int = when {
+    start.inside() && end.inside() -> knightTrajectory(start, end).size - 1
+    else -> throw IllegalArgumentException("square is incorrect")
 }
 
 /**
@@ -246,41 +256,73 @@ fun knightMoveNumber(start: Square, end: Square): Int {
  *
  * Если возможно несколько вариантов самой быстрой траектории, вернуть любой из них.
  */
-fun knightTrajectory(start: Square, end: Square): List<Square> {
-    if (!start.inside() || !end.inside()) throw IllegalArgumentException()
-    val queue = ArrayDeque<Square>()
-    queue.add(start)
-    val visited = mutableMapOf(start to 0)
-    val trajectories = mutableMapOf(start to listOf(start))
-    while (queue.isNotEmpty()) {
-        val next = queue.removeFirst()
-        val distance = visited[next]
-        if (next == end) return trajectories[next]!!
-        val nextSquares = mutableListOf<Square>()
-        val column = next.column
-        val row = next.row
-        if (column <= 7) {
-            if (row <= 6) nextSquares.add(Square(column + 1, row + 2))
-            if (row >= 3) nextSquares.add(Square(column + 1, row - 2))
-        }
-        if (column <= 6) {
-            if (row <= 7) nextSquares.add(Square(column + 2, row + 1))
-            if (row >= 2) nextSquares.add(Square(column + 2, row - 1))
-        }
-        if (column >= 2) {
-            if (row <= 6) nextSquares.add(Square(column - 1, row + 2))
-            if (row >= 3) nextSquares.add(Square(column - 1, row - 2))
-        }
-        if (column >= 3) {
-            if (row <= 7) nextSquares.add(Square(column - 2, row + 1))
-            if (row >= 2) nextSquares.add(Square(column - 2, row - 1))
-        }
-        for (square in nextSquares) {
-            if (square in visited) continue
-            visited[square] = distance!! + 1
-            trajectories[square] = trajectories[next]!! + square
-            queue.add(square)
+fun knightTrajectory(start: Square, end: Square): List<Square> =
+    when {
+        start == end -> listOf(start)
+        getKnightMoves(start).any { it == end } -> listOf(start, end) // если попали в end сразу
+        else -> {
+            // создаем из нашей доски невзвешенный граф
+            val moves = mutableMapOf<Square, Set<Square>>()
+            for (r in 1..8) {
+                for (c in 1..8) {
+                    val currentSquare = Square(c, r)
+                    moves[currentSquare] = getKnightMoves(currentSquare)
+                }
+            }
+            bfs(start, end, moves) // и запускаем поиск в ширину.
         }
     }
-    return emptyList()
+
+// функция, которая возвращает всевозможные ходы коня из клетки
+fun getKnightMoves(square: Square): Set<Square> {
+    val column = square.column
+    val row = square.row
+    return listOf(
+        Square(column + 2, row + 1),
+        Square(column + 2, row - 1),
+        Square(column - 2, row + 1),
+        Square(column - 2, row - 1),
+        Square(column + 1, row + 2),
+        Square(column + 1, row - 2),
+        Square(column - 1, row + 2),
+        Square(column - 1, row - 2)
+    ).filter { it.inside() }.toSet()
+}
+
+// воспользуемся поиском в ширину. (суть поиска в ширину подсмотрел из интернета)
+fun bfs(start: Square, end: Square, graph: Map<Square, Set<Square>>): List<Square> {
+    val distances = mutableMapOf<Square, Int>() // здесь будут храниться длины путей от каждой клетки до стартовой
+    val prev = mutableMapOf<Square, Square>() // для каждой клетки будем хранить предыдущую клетку на кратчайшем пути
+    for (i in graph.keys) {
+        distances[i] = 8 // так как ищем кратчайший путь, забиваем по умолчанию макс значением
+        prev[i] = Square(0, 0) // забиваем клеткой, которая не может существовать на доске
+    }
+    distances[start] = 0 // расстояние от start до самой себя 0
+    val queue = ArrayDeque<Square>() // нашел только эту реализацию очереди
+    queue.add(start)
+    while (queue.isNotEmpty()) {
+        val s = queue.first()
+        queue.removeFirst()
+        for (i in graph[s]!!) {
+            if (distances[i]!! > (distances[s]!! + 1)) {
+                prev[i] = s
+                distances[i] = distances[s]!! + 1
+                queue.add(i)
+            }
+        }
+    }
+    println(distances)
+    // теперь осталось восстановить путь
+    var finish = end
+    val resultPath = mutableListOf<Square>()
+    while (finish != Square(0, 0)) {
+        resultPath.add(finish)
+        finish = prev[finish]!!
+    }
+    return resultPath.reversed() // переворачиваем путь, так как шли с finish
+}
+
+
+fun main() {
+    println(knightTrajectory(Square(1, 1), Square(4, 4)))
 }

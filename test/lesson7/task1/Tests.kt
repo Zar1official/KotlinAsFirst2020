@@ -160,6 +160,7 @@ Basic, Ruby, Swift.
 
     }
 
+
     @Test
     @Tag("14")
     fun top20Words() {
@@ -230,7 +231,6 @@ Basic, Ruby, Swift.
         assertFileContent("temp.txt", "Карминовый, Некрасивый")
         File("temp.txt").delete()
     }
-
 
     private fun checkHtmlSimpleExample() {
         val result = File("temp.html").readText().replace(Regex("[\\s\\n\\t]"), "")

@@ -2,8 +2,6 @@
 
 package lesson5.task1
 
-import kotlin.math.max
-
 // Урок 5: ассоциативные массивы и множества
 // Максимальное количество баллов = 14
 // Рекомендуемое количество баллов = 9
@@ -16,7 +14,6 @@ import kotlin.math.max
  * на основе цен из `costs`. В случае неизвестной цены считать, что товар
  * игнорируется.
  */
-
 fun shoppingListCost(
     shoppingList: List<String>,
     costs: Map<String, Double>
@@ -111,7 +108,8 @@ fun buildGrades(grades: Map<String, Int>): Map<Int, List<String>> = TODO()
  *   containsIn(mapOf("a" to "z"), mapOf("a" to "z", "b" to "sweet")) -> true
  *   containsIn(mapOf("a" to "z"), mapOf("a" to "zee", "b" to "sweet")) -> false
  */
-fun containsIn(a: Map<String, String>, b: Map<String, String>): Boolean = TODO()
+fun containsIn(a: Map<String, String>, b: Map<String, String>): Boolean = b.entries.containsAll(a.entries)
+
 
 /**
  * Простая (2 балла)
@@ -131,6 +129,7 @@ fun subtractOf(a: MutableMap<String, String>, b: Map<String, String>) {
     TODO()
 }
 
+
 /**
  * Простая (2 балла)
  *
@@ -138,7 +137,7 @@ fun subtractOf(a: MutableMap<String, String>, b: Map<String, String>) {
  * В выходном списке не должно быть повторяющихся элементов,
  * т. е. whoAreInBoth(listOf("Марат", "Семён, "Марат"), listOf("Марат", "Марат")) == listOf("Марат")
  */
-fun whoAreInBoth(a: List<String>, b: List<String>): List<String> = TODO()
+fun whoAreInBoth(a: List<String>, b: List<String>): List<String> = a.toSet().intersect(b.toSet()).toList()
 
 /**
  * Средняя (3 балла)
@@ -157,7 +156,16 @@ fun whoAreInBoth(a: List<String>, b: List<String>): List<String> = TODO()
  *     mapOf("Emergency" to "911", "Police" to "02")
  *   ) -> mapOf("Emergency" to "112, 911", "Police" to "02")
  */
-fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<String, String> = TODO()
+fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<String, String> {
+    val result = mutableMapOf<String, String>()
+    mapA.forEach { (t, u) -> result += Pair(t, u) }
+    mapB.forEach { (t, u) ->
+        if (result.containsKey(t) && result[t] != u)
+            result[t] += ", $u"
+        else result += Pair(t, u)
+    }
+    return result
+}
 
 /**
  * Средняя (4 балла)
@@ -197,7 +205,11 @@ fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): S
  * Например:
  *   canBuildFrom(listOf('a', 'b', 'o'), "baobab") -> true
  */
-fun canBuildFrom(chars: List<Char>, word: String): Boolean = TODO()
+fun canBuildFrom(chars: List<Char>, word: String): Boolean =
+    if (word.isEmpty())
+        true
+    else chars.toSortedSet().map { it.lowercase() }.containsAll(word.toSortedSet().map { it.lowercase() })
+
 
 /**
  * Средняя (4 балла)
@@ -211,11 +223,18 @@ fun canBuildFrom(chars: List<Char>, word: String): Boolean = TODO()
  * Например:
  *   extractRepeats(listOf("a", "b", "a")) -> mapOf("a" to 2)
  */
-fun extractRepeats(list: List<String>): Map<String, Int> = TODO()
+fun extractRepeats(list: List<String>): Map<String, Int> {
+    val repeats = mutableMapOf<String, Int>()
+    list.forEach { elem ->
+        repeats[elem] = repeats[elem]?.plus(1) ?: 1
+    }
+    return repeats.filter { it.value > 1 }
+}
 
 /**
  * Средняя (3 балла)
- *
+
+}*
  * Для заданного списка слов определить, содержит ли он анаграммы.
  * Два слова здесь считаются анаграммами, если они имеют одинаковую длину
  * и одно можно составить из второго перестановкой его букв.
@@ -225,7 +244,11 @@ fun extractRepeats(list: List<String>): Map<String, Int> = TODO()
  * Например:
  *   hasAnagrams(listOf("тор", "свет", "рот")) -> true
  */
-fun hasAnagrams(words: List<String>): Boolean = TODO()
+fun hasAnagrams(words: List<String>): Boolean {
+    val w = words.map { it.toCharArray().sorted().joinToString("") }
+    return w.toSet().size != w.size
+}
+
 
 /**
  * Сложная (5 баллов)
@@ -281,14 +304,12 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
  *   findSumOfTwo(listOf(1, 2, 3), 6) -> Pair(-1, -1)
  */
 fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
-    val nmap = mutableMapOf<Int, Int>()
-    for (i in list.indices) {
-        if (!nmap.containsKey(list[i])) nmap[list[i]] = i
-        else if (list[i] * 2 == number) return Pair(nmap[list[i]]!!, i)
+    val listMapped = mutableMapOf<Int, Int>()
+    list.forEachIndexed { index, i ->
+        if (listMapped.containsKey(number - i))
+            return Pair(listMapped[number - i]!!, index)
+        listMapped += Pair(i, index)
     }
-    for ((n, ind) in nmap)
-        if (nmap.contains(number - n) && n * 2 != number) return Pair(ind, nmap[number - n]!!)
-
     return Pair(-1, -1)
 }
 
@@ -313,53 +334,42 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
  *     450
  *   ) -> emptySet()
  */
-
-
+// i am not rly good in sport programming, so i used this |
+//                                                        v
+// https://neerc.ifmo.ru/wiki/index.php?title=%D0%97%D0%B0%D0%B4%D0%B0%D1%87%D0%B0_%D0%BE_%D1%80%D1%8E%D0%BA%D0%B7%D0%B0%D0%BA%D0%B5#.D0.9D.D0.B5.D0.BE.D0.B3.D1.80.D0.B0.D0.BD.D0.B8.D1.87.D0.B5.D0.BD.D0.BD.D1.8B.D0.B9_.D1.80.D1.8E.D0.BA.D0.B7.D0.B0.D0.BA
 fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> {
-    val results = mutableMapOf<Pair<Int, Int>, Int>()
-    val weight = MutableList(treasures.size) { 0 }
-    val value = MutableList(treasures.size) { 0 }
-    val t = MutableList(treasures.size) { "" }
-    var lowWeight = capacity
-    val neededT = mutableMapOf<Pair<Int, Int>, Set<String>>()
-    var k = 1
-    for ((name, vw) in treasures) {
-        weight.add(k, vw.first)
-        value.add(k, vw.second)
-        t.add(k, name)
-        if (lowWeight > vw.first) lowWeight = vw.first
-        k += 1
-    }
-    for (j in 1..capacity) results[Pair(0, j)] = 0
-    for (i in 1..treasures.size) {
-        if (lowWeight <= capacity && treasures.isNotEmpty()) {
-            for (j in lowWeight..capacity) {
-                if (weight[i] > j) {
-                    results[Pair(i, j)] = results[Pair(i - 1, j)]!!
-                    neededT[Pair(i, j)] = neededT[Pair(i - 1, j)] ?: setOf()
-                } else {
-                    if (results[Pair(i - 1, j)] == 0) {
-                        results[Pair(i, j)] = value[i]
-                        neededT[Pair(i, j)] = setOf(t[i])
-                    } else {
-                        if (results[Pair(i - 1, j - weight[i])] == null) {
-                            results[Pair(i, j)] = max(results[Pair(i - 1, j)]!!, value[i])
-                            if (value[i] > results[Pair(i - 1, j)]!!) neededT[Pair(i, j)] = setOf(t[i])
-                            if (value[i] <= results[Pair(i - 1, j)]!!) neededT[Pair(i, j)] = neededT[Pair(i - 1, j)]!!
-                        } else {
-                            results[Pair(i, j)] = max(
-                                results[Pair(i - 1, j)]!!, results[Pair(i - 1, j - weight[i])]!! + value[i]
-                            )
-                            if (results[Pair(i - 1, j - weight[i])]!! + value[i] > results[Pair(i - 1, j)]!!) {
-                                neededT[Pair(i, j)] = neededT[Pair(i - 1, j - weight[i])]!! + t[i]
-                            } else neededT[Pair(i, j)] = neededT[Pair(i - 1, j)]!!
-                        }
-                    }
-                }
+    val values = treasures.values.toMutableList()
+    val keys = treasures.keys.toMutableList()
+    val size = values.size
+    val sumOfTreasuresTable = Array(size + 1) { Array(capacity + 1) { 0 } }
+
+    for (i in 1..size) {
+        for (j in 1..capacity) {
+            if (j >= values[i - 1].first) {
+                sumOfTreasuresTable[i][j] =
+                    maxOf(
+                        sumOfTreasuresTable[i - 1][j],
+                        sumOfTreasuresTable[i - 1][j - values[i - 1].first] + values[i - 1].second
+                    )
+            } else {
+                sumOfTreasuresTable[i][j] = sumOfTreasuresTable[i - 1][j]
             }
         }
     }
-    return if (neededT[Pair(treasures.size, capacity)] != null) neededT[Pair(treasures.size, capacity)]!!
-    else emptySet()
+    val treasuresNames = mutableSetOf<String>()
+    fun findAllTreasuresNames(i: Int, j: Int) {
+        if (sumOfTreasuresTable[i][j] == 0) return
+        if (sumOfTreasuresTable[i - 1][j] == sumOfTreasuresTable[i][j]) findAllTreasuresNames(i - 1, j)
+        else {
+            findAllTreasuresNames(i - 1, j - values[i - 1].first)
+            treasuresNames.add(keys[i - 1])
+        }
+    }
+    findAllTreasuresNames(size, capacity)
+    return treasuresNames
 }
 
+
+fun main() {
+    println(bagPacking(mapOf("dfkgvk" to Pair(2, 2), "dfkkgfrjgjg" to Pair(2, 3)), 2))
+}
