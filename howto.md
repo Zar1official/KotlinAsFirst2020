@@ -6,7 +6,7 @@
 3. Производим fetch из апстрима `git fetch upstream-my`
 4. Создаем ветку `backport` и переходим в нее: `git checkout -b backport`
 5. Переносим коммиты в backport: `git cherry-pick d535f3592006b8f2593c9f881d72c05164aadc13...FETCH_HEAD`
-6. Добавляем второй апстрим:  git remote add upstream-theirs `https://github.com/KimDamir/KotlinAsFirst2020`
+6. Добавляем второй апстрим:  git remote add upstream-theirs `https://github.com/KimDamir/KotlinAsFirst2021`
 7. Делаем `fetch upstream-theirs`
 8. Возвращемся в master: `git checkout master`
 9. Мерджим: `git merge backport upstream-theirs/master`
